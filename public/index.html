@@ -99,171 +99,216 @@
   /* Result */
   .result{ display:none; margin-top:22px; background:var(--negative-edge); border:1px solid #4A453C; border-radius:10px; padding:16px; gap:16px; align-items:center; }
   .result.show{ display:flex; }
-  .result img{ width:64px; height:64px; object-fit:cover; border-radius:6px; flex-shrink:0; }
+  .result img{ width:64px; height:64px; object-fit:cover; border-radius:6px; flex-shrink:0; background:#4A453C; }
   .result-info{ flex:1; min-width:0; }
-  .result-info .label{ font-family:'Space Mono',monospace; font-size:11px; color:#A89E8F; text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px; }
-  .result-link{ font-family:'Space Mono',monospace; font-size:13px; color:var(--paper-text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .copy-btn{ background:transparent; border:1px solid #5C5648; color:var(--paper-text); font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:13px; padding:9px 16px; border-radius:7px; cursor:pointer; flex-shrink:0; transition:border-color .15s ease, background .15s ease; }
-  .copy-btn:hover{ border-color:var(--accent); background:rgba(232,117,44,0.08); }
-  .copy-btn.copied{ border-color:var(--accent2); color:var(--accent2); }
+  .result-info .label{ font-family:'Space Mono',monospace; font-size:11px; color:#786F62; text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; }
+  .result-link{ font-family:'Space Mono',monospace; font-size:13px; color:var(--accent); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .copy-btn{ font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:13px; padding:10px 16px; border-radius:7px; border:none; background:var(--accent); color:#1A130A; cursor:pointer; white-space:nowrap; transition:filter .15s; flex-shrink:0; }
+  .copy-btn:hover{ filter:brightness(1.1); }
+  .copy-btn.copied{ background:#3F5D54; color:#fff; }
 
-  .error-msg{ display:none; margin-top:16px; color:#E8752C; font-size:13px; font-family:'Space Mono',monospace; background:rgba(232,117,44,0.1); border:1px solid rgba(232,117,44,0.3); border-radius:8px; padding:12px 14px; }
+  /* Error */
+  .error-msg{ display:none; margin-top:14px; padding:12px 16px; border-radius:8px; background:rgba(220,60,60,0.12); border:1px solid rgba(220,60,60,0.25); color:#E05050; font-size:14px; }
   .error-msg.show{ display:block; }
 
+  /* Toast */
+  .toast{ position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--negative); color:var(--paper-text); font-size:14px; font-family:'Space Grotesk',sans-serif; font-weight:600; padding:12px 22px; border-radius:999px; opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; z-index:9999; white-space:nowrap; }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
   /* Gallery */
-  .gallery-section{ margin-top:56px; }
-  .gallery-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:18px; }
-  .gallery-head h2{ font-family:'Space Grotesk',sans-serif; font-size:17px; margin:0; }
-  .gallery-head span{ font-family:'Space Mono',monospace; font-size:12px; color:var(--ink-soft); }
-  .gallery-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(160px,1fr)); gap:14px; }
+  .gallery-section{ margin-top:52px; }
+  .gallery-head{ display:flex; align-items:baseline; gap:12px; margin-bottom:20px; }
+  .gallery-head h2{ font-family:'Space Grotesk',sans-serif; font-size:20px; font-weight:700; margin:0; }
+  #galleryCount{ font-family:'Space Mono',monospace; font-size:12px; color:var(--ink-soft); }
+  .gallery-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:14px; }
+  @media(max-width:480px){ .gallery-grid{ grid-template-columns:repeat(2,1fr); gap:10px; } }
+  .empty-gallery{ grid-column:1/-1; text-align:center; padding:48px 24px; color:var(--ink-soft); font-size:15px; }
 
-  .frame{ background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden; position:relative; cursor:pointer; transition:transform .15s ease, box-shadow .15s ease; }
-  .frame:hover{ transform:translateY(-3px); box-shadow:var(--shadow); }
-  .frame .frame-img{ width:100%; aspect-ratio:1/1; object-fit:cover; display:block; background:var(--accent-soft); }
-  .frame-num{ position:absolute; top:8px; left:8px; background:rgba(33,31,27,0.78); color:var(--paper-text); font-family:'Space Mono',monospace; font-size:11px; padding:2px 7px; border-radius:5px; letter-spacing:.04em; }
+  /* Frame (gallery card) */
+  .frame{ border-radius:10px; overflow:hidden; background:var(--surface); border:1px solid var(--border); cursor:pointer; transition:transform .15s ease, box-shadow .15s ease; position:relative; }
+  .frame:hover{ transform:translateY(-2px); box-shadow:var(--shadow); }
+  .frame-num{ position:absolute; top:8px; left:8px; font-family:'Space Mono',monospace; font-size:10px; color:rgba(255,255,255,.7); background:rgba(0,0,0,.4); border-radius:4px; padding:2px 5px; z-index:1; }
 
-  /* Frame footer: name + like */
-  .frame-footer{ padding:8px 10px; display:flex; align-items:center; justify-content:space-between; gap:6px; border-top:1px solid var(--border); }
-  .frame-uploader{ font-size:12px; color:var(--ink-soft); font-family:'Inter',sans-serif; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; min-width:0; }
-  .like-btn{ display:flex; align-items:center; gap:4px; border:none; background:transparent; cursor:pointer; padding:3px 6px; border-radius:6px; transition:background .15s; flex-shrink:0; }
-  .like-btn:hover{ background:var(--accent-soft); }
-  .like-btn svg{ width:14px; height:14px; transition:fill .15s, stroke .15s; }
-  .like-btn .like-count{ font-family:'Space Mono',monospace; font-size:11px; color:var(--ink-soft); }
-  .like-btn.liked svg{ fill:var(--accent); stroke:var(--accent); }
-  .like-btn.liked .like-count{ color:var(--accent); }
-
-  .empty-gallery{ grid-column:1/-1; text-align:center; padding:36px 12px; color:var(--ink-soft); font-size:13px; border:1px dashed var(--border); border-radius:10px; }
-
-  /* NSFW blur */
+  /* Image wrapper — keeps aspect ratio & shows skeleton while loading */
+  .frame-img-wrap{
+    width:100%; aspect-ratio:1/1; overflow:hidden;
+    background: linear-gradient(90deg, #E8E0D0 25%, #F0E8D8 50%, #E8E0D0 75%);
+    background-size: 200% 100%;
+    animation: skeleton 1.4s infinite;
+    position: relative;
+  }
+  .frame-img-wrap.loaded{ background:none; animation:none; }
+  @keyframes skeleton{ 0%{ background-position:200% 0; } 100%{ background-position:-200% 0; } }
+  .frame-img{
+    width:100%; height:100%; object-fit:cover; display:block;
+    opacity:0; transition:opacity .3s ease;
+    position:absolute; top:0; left:0;
+  }
+  .frame-img.visible{ opacity:1; }
   .frame.nsfw .frame-img{ filter:blur(16px); }
-  .frame.nsfw .nsfw-overlay{ display:flex; }
-  .nsfw-overlay{ display:none; position:absolute; inset:0; align-items:center; justify-content:center; flex-direction:column; gap:4px; background:rgba(33,31,27,0.45); cursor:pointer; }
-  .nsfw-badge{ background:#c0392b; color:#fff; font-family:'Space Mono',monospace; font-size:10px; font-weight:700; padding:3px 9px; border-radius:4px; letter-spacing:.08em; }
-  .nsfw-tap{ font-size:11px; color:rgba(255,255,255,0.75); font-family:'Inter',sans-serif; }
   .frame.nsfw-revealed .frame-img{ filter:none; }
-  .frame.nsfw-revealed .nsfw-overlay{ display:none; }
+  /* Error state */
+  .frame-img-wrap.error{ animation:none; background:#EDE8E0; }
+  .frame-img-wrap.error::after{
+    content:'⚠'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    font-size:24px; opacity:.4;
+  }
 
-  /* NSFW modal warning */
-  .modal-nsfw-bar{ display:none; align-items:center; gap:10px; background:#fdf0ee; border:1px solid #e5b4ae; border-radius:8px; padding:10px 14px; margin-bottom:14px; }
+  .nsfw-overlay{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; background:rgba(33,31,27,.7); z-index:2; }
+  .nsfw-badge{ font-family:'Space Mono',monospace; font-size:11px; font-weight:700; color:#fff; background:rgba(220,60,60,.8); border-radius:4px; padding:3px 7px; letter-spacing:.04em; }
+  .nsfw-tap{ font-size:12px; color:rgba(255,255,255,.7); }
+
+  .frame-footer{ padding:8px 10px; display:flex; align-items:center; justify-content:space-between; gap:6px; }
+  .frame-uploader{ font-size:12px; font-weight:500; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .like-btn{ display:flex; align-items:center; gap:4px; background:none; border:none; cursor:pointer; padding:4px; border-radius:6px; transition:background .15s; flex-shrink:0; }
+  .like-btn:hover{ background:var(--accent-soft); }
+  .like-btn svg{ width:14px; height:14px; }
+  .like-count{ font-size:12px; color:var(--ink-soft); font-family:'Space Mono',monospace; }
+
+  /* Load more button */
+  .load-more-wrap{ text-align:center; margin-top:24px; }
+  .load-more-btn{ font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px; padding:12px 28px; border-radius:8px; border:1.5px solid var(--border); background:var(--surface); color:var(--ink); cursor:pointer; transition:all .15s ease; }
+  .load-more-btn:hover{ border-color:var(--accent); color:var(--accent); }
+  .load-more-btn:disabled{ opacity:.5; cursor:default; }
+
+  /* Modal */
+  .modal-overlay{ position:fixed; inset:0; background:rgba(33,31,27,.7); display:none; align-items:flex-end; justify-content:center; z-index:1000; -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px); }
+  @media(min-width:600px){ .modal-overlay{ align-items:center; } }
+  .modal-overlay.open{ display:flex; }
+  .modal{ background:var(--surface); border-radius:var(--radius) var(--radius) 0 0; width:100%; max-width:520px; max-height:92vh; overflow-y:auto; padding-bottom:env(safe-area-inset-bottom, 0px); -webkit-overflow-scrolling:touch; overscroll-behavior:contain; }
+  @media(min-width:600px){ .modal{ border-radius:var(--radius); max-height:88vh; } }
+  .modal-header{ display:flex; align-items:center; justify-content:space-between; padding:18px 20px 12px; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--surface); z-index:1; }
+  .modal-header h3{ font-family:'Space Grotesk',sans-serif; font-size:17px; font-weight:700; margin:0; }
+  .modal-close{ width:32px; height:32px; border-radius:999px; border:none; background:var(--bg); color:var(--ink); font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .modal-body{ padding:20px; }
+
+  .modal-nsfw-bar{ display:none; align-items:center; gap:10px; background:#fff0f0; border:1px solid rgba(220,60,60,.2); border-radius:8px; padding:10px 14px; margin-bottom:14px; font-size:13px; color:#c03030; }
   .modal-nsfw-bar.show{ display:flex; }
-  .modal-nsfw-bar .nsfw-badge{ flex-shrink:0; }
-  .modal-nsfw-bar span{ font-size:12px; color:#7a3228; font-family:'Inter',sans-serif; flex:1; }
-  .modal-nsfw-bar button{ font-size:12px; font-family:'Space Grotesk',sans-serif; font-weight:600; background:#c0392b; color:#fff; border:none; border-radius:6px; padding:5px 12px; cursor:pointer; flex-shrink:0; }
+  .modal-nsfw-bar button{ margin-left:auto; font-size:12px; padding:5px 12px; border-radius:6px; border:1px solid rgba(220,60,60,.3); background:transparent; color:#c03030; cursor:pointer; }
+
+  /* Modal image wrapper with skeleton */
+  .modal-img-wrap{
+    width:100%; min-height:180px; max-height:320px; overflow:hidden; border-radius:8px;
+    background:linear-gradient(90deg, #E8E0D0 25%, #F0E8D8 50%, #E8E0D0 75%);
+    background-size:200% 100%; animation:skeleton 1.4s infinite;
+    margin-bottom:16px; position:relative; display:flex; align-items:center; justify-content:center;
+  }
+  .modal-img-wrap.loaded{ background:var(--bg); animation:none; }
+  .modal-img-wrap.error{ background:#EDE8E0; animation:none; }
+  .modal-img-wrap.error::after{ content:'Gambar tidak dapat dimuat ⚠️'; font-size:13px; color:var(--ink-soft); }
+  .modal-img{
+    width:100%; max-height:320px; object-fit:contain;
+    display:block; opacity:0; transition:opacity .3s;
+  }
+  .modal-img.ready{ opacity:1; }
   .modal-img.nsfw-blur{ filter:blur(20px); transition:filter .3s; }
   .modal-img.nsfw-blur.revealed{ filter:none; }
 
-  /* Toast */
-  .toast{ position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--negative); color:var(--paper-text); font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:600; padding:12px 20px; border-radius:999px; box-shadow:var(--shadow); opacity:0; pointer-events:none; transition:opacity .2s ease, transform .2s ease; z-index:100; }
-  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+  .modal-meta{ display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+  .modal-uploader{ font-weight:600; font-size:14px; }
+  .modal-date{ font-size:12px; color:var(--ink-soft); margin-top:2px; }
+  .modal-like-btn{ display:flex; align-items:center; gap:6px; background:none; border:1.5px solid var(--border); border-radius:999px; padding:8px 14px; cursor:pointer; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px; color:var(--ink); transition:all .15s; }
+  .modal-like-btn:hover,.modal-like-btn.liked{ border-color:var(--accent); color:var(--accent); }
+  .modal-like-btn svg{ width:16px; height:16px; }
 
-  footer{ margin-top:64px; text-align:center; font-size:12px; color:var(--ink-soft); font-family:'Space Mono',monospace; }
-  [data-panel]{ display:none; }
-  [data-panel].active{ display:block; }
+  .modal-copy-row{ display:flex; align-items:center; gap:8px; background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:10px 12px; margin-bottom:16px; }
+  .modal-url{ font-family:'Space Mono',monospace; font-size:12px; color:var(--ink-soft); flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .modal-copy{ font-size:13px; font-family:'Space Grotesk',sans-serif; font-weight:600; padding:6px 12px; border-radius:6px; border:none; background:var(--accent); color:#1A130A; cursor:pointer; flex-shrink:0; transition:filter .15s; }
+  .modal-copy:hover{ filter:brightness(1.1); }
+  .modal-copy.copied{ background:#3F5D54; color:#fff; }
 
-  /* ===== MODAL ===== */
-  .modal-overlay{ position:fixed; inset:0; background:rgba(33,31,27,0.85); z-index:200; display:none; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(4px); }
-  .modal-overlay.open{ display:flex; }
-  .modal{ background:var(--surface); border-radius:var(--radius); width:100%; max-width:680px; max-height:90vh; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(0,0,0,0.3); }
-  .modal-header{ display:flex; align-items:center; justify-content:space-between; padding:18px 20px; border-bottom:1px solid var(--border); flex-shrink:0; }
-  .modal-header h3{ font-family:'Space Grotesk',sans-serif; font-size:15px; margin:0; font-weight:600; }
-  .modal-close{ background:transparent; border:1px solid var(--border); color:var(--ink-soft); width:32px; height:32px; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:border-color .15s; font-size:18px; line-height:1; }
-  .modal-close:hover{ border-color:var(--accent); color:var(--ink); }
-  .modal-body{ overflow-y:auto; padding:20px; flex:1; }
-  .modal-img{ width:100%; max-height:300px; object-fit:contain; border-radius:8px; background:var(--bg); margin-bottom:16px; }
-  .modal-meta{ display:flex; align-items:center; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
-  .modal-uploader{ font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px; color:var(--ink); }
-  .modal-date{ font-family:'Space Mono',monospace; font-size:11px; color:var(--ink-soft); }
-  .modal-like-btn{ margin-left:auto; display:flex; align-items:center; gap:6px; border:1px solid var(--border); background:transparent; cursor:pointer; padding:7px 14px; border-radius:8px; transition:all .15s; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:13px; color:var(--ink-soft); }
-  .modal-like-btn:hover{ border-color:var(--accent); background:var(--accent-soft); color:var(--ink); }
-  .modal-like-btn svg{ width:16px; height:16px; transition:fill .15s, stroke .15s; }
-  .modal-like-btn.liked{ border-color:var(--accent); color:var(--accent); }
-  .modal-like-btn.liked svg{ fill:var(--accent); stroke:var(--accent); }
-  .modal-copy-row{ display:flex; gap:8px; margin-bottom:24px; }
-  .modal-url{ flex:1; font-family:'Space Mono',monospace; font-size:12px; background:var(--bg); border:1px solid var(--border); border-radius:7px; padding:10px 12px; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .modal-copy{ font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:13px; padding:10px 16px; border-radius:7px; border:none; background:var(--accent); color:#1A130A; cursor:pointer; flex-shrink:0; transition:filter .15s; }
-  .modal-copy:hover{ filter:brightness(1.08); }
-  .modal-copy.copied{ background:var(--accent2); color:#fff; }
+  /* Download button */
+  .modal-download-btn{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    width:100%; padding:11px 16px; border-radius:8px; border:1.5px solid var(--border);
+    background:var(--surface); color:var(--ink); font-family:'Space Grotesk',sans-serif;
+    font-weight:600; font-size:14px; cursor:pointer; transition:all .15s ease;
+    margin-bottom:16px; text-decoration:none;
+  }
+  .modal-download-btn:hover{ border-color:var(--accent2); color:var(--accent2); background:rgba(63,93,84,.06); }
+  .modal-download-btn svg{ width:16px; height:16px; stroke:currentColor; flex-shrink:0; }
 
   /* Comments */
-  .comments-title{ font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px; margin:0 0 14px; }
-  .comment-list{ display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
-  .comment-item{ background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:12px 14px; }
-  .comment-author{ font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:13px; color:var(--ink); margin-bottom:4px; }
-  .comment-date{ font-family:'Space Mono',monospace; font-size:10px; color:var(--ink-soft); margin-bottom:6px; }
-  .comment-text{ font-size:13px; color:var(--ink); line-height:1.5; }
-  .no-comments{ font-size:13px; color:var(--ink-soft); margin-bottom:20px; }
+  .comments-title{ font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:700; margin:0 0 12px; }
+  .comment-list{ display:flex; flex-direction:column; gap:10px; margin-bottom:16px; }
+  .comment-item{ background:var(--bg); border-radius:8px; padding:12px 14px; }
+  .comment-author{ font-weight:600; font-size:13px; }
+  .comment-date{ font-size:11px; color:var(--ink-soft); margin-bottom:4px; }
+  .comment-text{ font-size:14px; line-height:1.5; }
+  .no-comments{ text-align:center; padding:20px; color:var(--ink-soft); font-size:14px; }
 
-  /* Comment form */
-  .comment-form{ display:flex; flex-direction:column; gap:10px; border-top:1px solid var(--border); padding-top:16px; }
+  .comment-form{ display:flex; flex-direction:column; gap:10px; border-top:1px solid var(--border); padding-top:16px; margin-top:4px; }
   .comment-form label{ font-family:'Space Mono',monospace; font-size:11px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.06em; }
   .comment-form input, .comment-form textarea{ width:100%; border:1px solid var(--border); border-radius:7px; background:var(--bg); color:var(--ink); padding:10px 12px; font-size:13px; font-family:'Inter',sans-serif; outline:none; transition:border-color .15s; resize:vertical; }
   .comment-form input:focus, .comment-form textarea:focus{ border-color:var(--accent); }
-  .comment-form textarea{ min-height:80px; }
-  .comment-word-count{ font-family:'Space Mono',monospace; font-size:11px; color:var(--ink-soft); text-align:right; }
-  .comment-word-count.over{ color:#E8752C; }
-  .comment-submit{ font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:13px; padding:10px 18px; border-radius:7px; border:none; background:var(--accent); color:#1A130A; cursor:pointer; transition:filter .15s; align-self:flex-start; }
+  .comment-word-count{ font-size:11px; color:var(--ink-soft); text-align:right; }
+  .comment-word-count.over{ color:#E05050; }
+  .comment-error{ font-size:13px; color:#E05050; }
+  .comment-submit{ font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px; padding:11px; border-radius:8px; border:none; background:var(--accent); color:#1A130A; cursor:pointer; transition:filter .15s; }
   .comment-submit:hover{ filter:brightness(1.08); }
   .comment-submit:disabled{ opacity:.5; cursor:default; }
-  .comment-error{ font-size:12px; color:var(--accent); font-family:'Space Mono',monospace; }
+
+  /* Tabs panel active state */
+  [data-panel]{ display:none; }
+  [data-panel].active{ display:block; }
+
+  footer{ margin-top:60px; text-align:center; font-size:13px; color:var(--ink-soft); font-family:'Space Mono',monospace; }
 </style>
 </head>
 <body>
 <div class="wrap">
-
   <header>
     <div class="brand">
       <div class="brand-mark"></div>
       <div>
         <h1>Kirim Gambar</h1>
-        <p>upload.example &mdash; link instan</p>
+        <p>upload &amp; bagikan link instan</p>
       </div>
     </div>
-    <p class="tagline">Tarik file ke kotak gelap di bawah, atau tempel link gambar &mdash; dapatkan link siap pakai dalam sekejap.</p>
+    <p class="tagline">Upload foto, dapat link langsung. Gratis, tanpa login.</p>
   </header>
 
   <div class="tabs">
-    <button class="tab-btn active" data-tab="file">Dari Perangkat</button>
+    <button class="tab-btn active" data-tab="file">Upload File</button>
     <button class="tab-btn" data-tab="link">Dari Link</button>
   </div>
 
   <div class="panel">
-    <div class="sprockets">
-      <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-    </div>
-
+    <div class="sprockets"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
     <div class="panel-body">
 
+      <!-- Upload File -->
       <div data-panel="file" class="active">
-        <!-- Nama wajib diisi -->
         <div class="name-input-wrap">
           <label for="uploaderName">Nama kamu</label>
-          <input type="text" id="uploaderName" placeholder="Masukkan namamu dulu…" maxlength="60" autocomplete="off" />
+          <input type="text" id="uploaderName" placeholder="Masukkan nama kamu…" maxlength="60" autocomplete="name" />
         </div>
         <div class="dropzone" id="dropzone">
           <div class="dropzone-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 16V4"/><path d="M5 11l7-7 7 7"/><path d="M4 20h16"/>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
             </svg>
           </div>
-          <h3>Lepas gambar di sini</h3>
-          <p>atau <span>klik untuk pilih file</span> &mdash; JPG, PNG, GIF, WEBP, maks 10MB</p>
+          <h3>Seret &amp; lepas gambar di sini</h3>
+          <p>atau <span>pilih dari perangkat</span> · JPG, PNG, GIF, WEBP, AVIF, SVG · maks 10 MB</p>
         </div>
-        <input type="file" id="fileInput" accept="image/*" hidden />
+        <input type="file" id="fileInput" accept="image/*" style="display:none" />
       </div>
 
+      <!-- Upload from Link -->
       <div data-panel="link">
         <div class="link-form">
-          <div>
+          <div class="name-input-wrap">
             <label for="linkUploaderName">Nama kamu</label>
-            <div style="margin-top:8px">
-              <input type="text" id="linkUploaderName" style="width:100%;background:var(--negative-edge);border:1px solid #4A453C;border-radius:8px;color:var(--paper-text);padding:13px 14px;font-size:14px;font-family:Inter,sans-serif;outline:none;transition:border-color .15s ease" placeholder="Masukkan namamu dulu…" maxlength="60" autocomplete="off" />
-            </div>
+            <input type="text" id="linkUploaderName" placeholder="Masukkan nama kamu…" maxlength="60" autocomplete="name" />
           </div>
           <div>
-            <label for="urlInput">URL gambar</label>
+            <label for="urlInput">Link gambar</label>
             <div class="link-row" style="margin-top:8px">
-              <input type="url" id="urlInput" placeholder="https://contoh.com/gambar.jpg" />
-              <button class="btn" id="urlSubmit">Ambil &amp; simpan</button>
+              <input type="url" id="urlInput" placeholder="https://example.com/foto.jpg" />
+              <button class="btn" id="urlSubmit">Simpan</button>
             </div>
           </div>
           <p class="hint">Gambar dari link akan diunduh dan disimpan ulang, jadi link hasilnya tetap aktif meski link asal mati.</p>
@@ -297,6 +342,9 @@
     <div class="gallery-grid" id="galleryGrid">
       <div class="empty-gallery">Memuat galeri&hellip;</div>
     </div>
+    <div class="load-more-wrap" id="loadMoreWrap" style="display:none">
+      <button class="load-more-btn" id="loadMoreBtn">Muat lebih banyak</button>
+    </div>
   </div>
 
   <footer>dibuat dengan Cloudflare Pages + Workers KV</footer>
@@ -309,7 +357,7 @@
   <div class="modal">
     <div class="modal-header">
       <h3 id="modalTitle">Detail Gambar</h3>
-      <button class="modal-close" id="modalClose">&times;</button>
+      <button class="modal-close" id="modalClose" aria-label="Tutup">&times;</button>
     </div>
     <div class="modal-body">
       <div class="modal-nsfw-bar" id="modalNsfwBar">
@@ -317,7 +365,11 @@
         <span>Gambar ini ditandai mengandung konten dewasa.</span>
         <button id="modalNsfwReveal">Tampilkan</button>
       </div>
-      <img class="modal-img" id="modalImg" alt="" />
+
+      <div class="modal-img-wrap" id="modalImgWrap">
+        <img class="modal-img" id="modalImg" alt="" />
+      </div>
+
       <div class="modal-meta">
         <div>
           <div class="modal-uploader" id="modalUploader"></div>
@@ -330,10 +382,21 @@
           <span id="modalLikeCount">0</span>
         </button>
       </div>
+
       <div class="modal-copy-row">
         <div class="modal-url" id="modalUrl"></div>
         <button class="modal-copy" id="modalCopyBtn">Salin</button>
       </div>
+
+      <!-- Tombol Download -->
+      <a class="modal-download-btn" id="modalDownloadBtn" href="#" download>
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Unduh Gambar
+      </a>
 
       <!-- Komentar -->
       <p class="comments-title">Komentar</p>
@@ -369,6 +432,7 @@ function hideError(){ document.getElementById('errorMsg').classList.remove('show
 function resetProgress(){ const w=document.getElementById('progressWrap'); w.classList.remove('show'); document.getElementById('progressFill').style.width='0%'; }
 function countWords(text){ return text.trim().split(/\s+/).filter(Boolean).length; }
 function fmtDate(iso){ if(!iso) return ''; const d=new Date(iso); return d.toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'})+' '+d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}); }
+function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 // ===================== TABS =====================
 const tabBtns = document.querySelectorAll('.tab-btn');
@@ -394,7 +458,9 @@ fileInput.addEventListener('change', e => { const f=e.target.files[0]; if(f) han
 
 function showResult(url, previewSrc){
   const r=document.getElementById('result'); r.classList.add('show');
-  document.getElementById('resultImg').src=previewSrc;
+  const ri=document.getElementById('resultImg');
+  ri.src=previewSrc;
+  ri.onerror=()=>{ ri.style.display='none'; };
   const rl=document.getElementById('resultLink'); rl.textContent=url; rl.dataset.url=url;
 }
 
@@ -431,6 +497,9 @@ function handleFile(file){
       const data=JSON.parse(xhr.responseText);
       if(xhr.status>=200 && xhr.status<300 && data.success){
         showResult(data.url, localPreview);
+        // Reset gallery to page 1
+        galleryPage = 1;
+        galleryImages = [];
         loadGallery();
       } else { showError(data.error||'Gagal mengunggah gambar.'); }
     } catch { showError('Terjadi kesalahan saat memproses respons server.'); }
@@ -466,6 +535,8 @@ document.getElementById('urlSubmit').addEventListener('click', async () => {
     if(res.ok && data.success){
       showResult(data.url, url);
       document.getElementById('urlInput').value='';
+      galleryPage = 1;
+      galleryImages = [];
       loadGallery();
     } else { showError(data.error||'Gagal mengambil gambar dari link.'); }
   } catch { resetProgress(); showError('Koneksi gagal. Coba lagi.'); }
@@ -486,30 +557,85 @@ document.getElementById('copyBtn').addEventListener('click', async () => {
 
 // ===================== GALLERY =====================
 let galleryImages = [];
+let galleryPage   = 1;
+let galleryTotal  = 0;
+let galleryHasMore = false;
+let galleryLoading = false;
+
+// IntersectionObserver for lazy loading images
+const imgObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      const wrap = entry.target;
+      const img  = wrap.querySelector('.frame-img');
+      if(img && img.dataset.src && !img.src){
+        img.src = img.dataset.src;
+        img.onload  = () => { wrap.classList.add('loaded'); img.classList.add('visible'); };
+        img.onerror = () => { wrap.classList.add('error'); wrap.classList.remove('loaded'); img.style.display='none'; };
+        imgObserver.unobserve(wrap);
+      }
+    }
+  });
+}, { rootMargin: '200px 0px' });
 
 function heartSvg(filled){
-  const fill = filled ? 'var(--accent)' : 'none';
+  const fill   = filled ? 'var(--accent)' : 'none';
   const stroke = filled ? 'var(--accent)' : 'var(--ink-soft)';
   return `<svg viewBox="0 0 24 24" fill="${fill}" stroke="${stroke}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
 }
 
-async function loadGallery(){
+async function loadGallery(append = false){
+  if(galleryLoading) return;
+  galleryLoading = true;
+
+  const grid    = document.getElementById('galleryGrid');
+  const loadBtn = document.getElementById('loadMoreBtn');
+  const loadWrap = document.getElementById('loadMoreWrap');
+
+  if(!append){
+    grid.innerHTML = '<div class="empty-gallery">Memuat galeri\u2026</div>';
+    loadWrap.style.display = 'none';
+  } else {
+    loadBtn.disabled = true;
+    loadBtn.textContent = 'Memuat\u2026';
+  }
+
   try{
-    const res = await fetch('/api/list');
+    const res  = await fetch(`/api/list?page=${galleryPage}&limit=12`);
     const data = await res.json();
-    galleryImages = data.images || [];
-    const grid = document.getElementById('galleryGrid');
-    document.getElementById('galleryCount').textContent = galleryImages.length ? `${galleryImages.length} gambar` : '';
+
+    const newImages = data.images || [];
+    galleryTotal   = data.total || 0;
+    galleryHasMore = data.hasMore || false;
+
+    if(!append) galleryImages = [];
+    const startIndex = galleryImages.length;
+    galleryImages = galleryImages.concat(newImages);
+
+    document.getElementById('galleryCount').textContent = galleryTotal ? `${galleryTotal} gambar` : '';
 
     if(!galleryImages.length){
       grid.innerHTML='<div class="empty-gallery">Belum ada gambar. Jadilah yang pertama mengunggah!</div>';
+      galleryLoading = false;
       return;
     }
 
-    grid.innerHTML = galleryImages.map((img, i) => `
-      <div class="frame${img.nsfw ? ' nsfw' : ''}" data-key="${img.key}" data-index="${i}">
-        <span class="frame-num">${String(galleryImages.length-i).padStart(2,'0')}</span>
-        <img class="frame-img" src="${img.url}" alt="Gambar ${i+1}" loading="lazy" />
+    if(!append) grid.innerHTML = '';
+
+    // Render only new cards
+    const fragment = document.createDocumentFragment();
+    newImages.forEach((img, i) => {
+      const globalIdx = startIndex + i;
+      const displayNum = galleryTotal - globalIdx;
+      const card = document.createElement('div');
+      card.className = `frame${img.nsfw ? ' nsfw' : ''}`;
+      card.dataset.key   = img.key;
+      card.dataset.index = globalIdx;
+      card.innerHTML = `
+        <span class="frame-num">${String(displayNum).padStart(2,'0')}</span>
+        <div class="frame-img-wrap">
+          <img class="frame-img" data-src="${img.url}" alt="Gambar ${globalIdx+1}" />
+        </div>
         ${img.nsfw ? `<div class="nsfw-overlay"><span class="nsfw-badge">NSFW</span><span class="nsfw-tap">tap untuk lihat</span></div>` : ''}
         <div class="frame-footer">
           <span class="frame-uploader">${img.name ? escHtml(img.name) : '&mdash;'}</span>
@@ -518,14 +644,22 @@ async function loadGallery(){
             <span class="like-count">${img.likes||0}</span>
           </button>
         </div>
-      </div>
-    `).join('');
+      `;
+      fragment.appendChild(card);
+    });
+    grid.appendChild(fragment);
 
-    // Click on image → open modal (skip if clicking like-btn)
-    grid.querySelectorAll('.frame').forEach(frame => {
-      // NSFW overlay: tap to reveal
+    // Observe new image wrappers for lazy loading
+    grid.querySelectorAll('.frame-img-wrap:not([data-observed])').forEach(wrap => {
+      wrap.dataset.observed = '1';
+      imgObserver.observe(wrap);
+    });
+
+    // Bind events on new cards
+    grid.querySelectorAll('.frame:not([data-bound])').forEach(frame => {
+      frame.dataset.bound = '1';
       const nsfwOverlay = frame.querySelector('.nsfw-overlay');
-      if (nsfwOverlay) {
+      if(nsfwOverlay){
         nsfwOverlay.addEventListener('click', e => {
           e.stopPropagation();
           frame.classList.add('nsfw-revealed');
@@ -533,28 +667,42 @@ async function loadGallery(){
       }
       frame.addEventListener('click', e => {
         if(e.target.closest('.like-btn')) return;
-        // If NSFW and not revealed yet, let overlay handle it
         if(frame.classList.contains('nsfw') && !frame.classList.contains('nsfw-revealed')) return;
         const idx = parseInt(frame.dataset.index);
         openModal(galleryImages[idx]);
       });
     });
-
-    // Like buttons in gallery
-    grid.querySelectorAll('.like-btn').forEach(btn => {
+    grid.querySelectorAll('.like-btn:not([data-bound])').forEach(btn => {
+      btn.dataset.bound = '1';
       btn.addEventListener('click', e => {
         e.stopPropagation();
         toggleLike(btn.dataset.key, btn);
       });
     });
 
+    // Show/hide load more button
+    if(galleryHasMore){
+      loadWrap.style.display = 'block';
+      loadBtn.disabled = false;
+      loadBtn.textContent = 'Muat lebih banyak';
+    } else {
+      loadWrap.style.display = 'none';
+    }
+
   } catch {
-    document.getElementById('galleryGrid').innerHTML='<div class="empty-gallery">Galeri tidak dapat dimuat saat ini.</div>';
+    if(!append) grid.innerHTML='<div class="empty-gallery">Galeri tidak dapat dimuat saat ini.</div>';
   }
+
+  galleryLoading = false;
 }
 
-function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+// Load more button
+document.getElementById('loadMoreBtn').addEventListener('click', () => {
+  galleryPage++;
+  loadGallery(true);
+});
 
+// ===================== LIKE =====================
 async function toggleLike(key, btnEl){
   try{
     const res = await fetch('/api/likes', {
@@ -564,14 +712,12 @@ async function toggleLike(key, btnEl){
     });
     const data = await res.json();
     if(data.success !== undefined || data.count !== undefined){
-      const count = data.count;
-      const liked = data.liked;
-      // Update this specific button
+      const count  = data.count;
+      const liked  = data.liked;
       if(btnEl){
         btnEl.innerHTML = heartSvg(liked) + `<span class="like-count">${count}</span>`;
         btnEl.classList.toggle('liked', liked);
       }
-      // Sync modal if open for same key
       const currentKey = document.getElementById('modalOverlay').dataset.key;
       if(currentKey === key){
         document.getElementById('modalLikeCount').textContent = count;
@@ -580,6 +726,9 @@ async function toggleLike(key, btnEl){
         mlb.querySelector('svg').setAttribute('fill', liked ? 'var(--accent)' : 'none');
         mlb.querySelector('svg').setAttribute('stroke', liked ? 'var(--accent)' : 'currentColor');
       }
+      // Sync data array
+      const imgData = galleryImages.find(i => i.key === key);
+      if(imgData) imgData.likes = count;
     }
   } catch { showToast('Gagal memproses like.'); }
 }
@@ -589,23 +738,43 @@ async function openModal(img){
   const overlay = document.getElementById('modalOverlay');
   overlay.dataset.key = img.key;
 
-  const modalImg = document.getElementById('modalImg');
-  modalImg.src = img.url;
-  // NSFW blur on modal image
+  // Reset image
+  const modalImg  = document.getElementById('modalImg');
+  const imgWrap   = document.getElementById('modalImgWrap');
+  modalImg.src    = '';
+  modalImg.className = 'modal-img';
+  imgWrap.className  = 'modal-img-wrap';
+
+  // NSFW
   const nsfwBar = document.getElementById('modalNsfwBar');
-  if (img.nsfw) {
+  if(img.nsfw){
     modalImg.classList.add('nsfw-blur');
     nsfwBar.classList.add('show');
   } else {
-    modalImg.classList.remove('nsfw-blur', 'revealed');
     nsfwBar.classList.remove('show');
   }
 
-  document.getElementById('modalTitle').textContent = img.name ? `Foto dari ${img.name}` : 'Detail Gambar';
+  document.getElementById('modalTitle').textContent    = img.name ? `Foto dari ${img.name}` : 'Detail Gambar';
   document.getElementById('modalUploader').textContent = img.name || 'Anonim';
-  document.getElementById('modalDate').textContent = fmtDate(img.uploaded);
-  document.getElementById('modalUrl').textContent = img.url;
-  document.getElementById('modalUrl').dataset.url = img.url;
+  document.getElementById('modalDate').textContent     = fmtDate(img.uploaded);
+  document.getElementById('modalUrl').textContent      = img.url;
+  document.getElementById('modalUrl').dataset.url      = img.url;
+
+  // Set download link — pakai ?download=1 agar server kirim Content-Disposition attachment
+  const dlBtn = document.getElementById('modalDownloadBtn');
+  dlBtn.href = img.url + '?download=1';
+  // Ekstrak filename dari key untuk atribut download
+  dlBtn.setAttribute('download', img.key);
+
+  // Load image with skeleton + error handling
+  modalImg.onload  = () => { imgWrap.classList.add('loaded'); modalImg.classList.add('ready'); };
+  modalImg.onerror = () => {
+    imgWrap.classList.add('error');
+    imgWrap.classList.remove('loaded');
+    modalImg.style.display = 'none';
+    dlBtn.style.display    = 'none'; // Hide download if image broken
+  };
+  modalImg.src = img.url;
 
   // Fetch likes
   try{
@@ -618,17 +787,14 @@ async function openModal(img){
     mlb.querySelector('svg').setAttribute('stroke', ld.liked ? 'var(--accent)' : 'currentColor');
   } catch {}
 
-  // Load comments
+  dlBtn.style.display = '';
   await loadComments(img.key);
-
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
 
-// NSFW reveal button in modal
 document.getElementById('modalNsfwReveal').addEventListener('click', () => {
-  const img = document.getElementById('modalImg');
-  img.classList.add('revealed');
+  document.getElementById('modalImg').classList.add('revealed');
   document.getElementById('modalNsfwBar').classList.remove('show');
 });
 
@@ -636,7 +802,7 @@ async function loadComments(key){
   const list = document.getElementById('commentList');
   list.innerHTML = '<div class="no-comments">Memuat komentar\u2026</div>';
   try{
-    const res = await fetch(`/api/comments?key=${encodeURIComponent(key)}`);
+    const res  = await fetch(`/api/comments?key=${encodeURIComponent(key)}`);
     const data = await res.json();
     const comments = data.comments || [];
     if(!comments.length){
@@ -658,15 +824,23 @@ async function loadComments(key){
 function closeModal(){
   document.getElementById('modalOverlay').classList.remove('open');
   document.body.style.overflow = '';
-  // reset comment form
-  document.getElementById('commentName').value = '';
-  document.getElementById('commentText').value = '';
+  document.getElementById('commentName').value  = '';
+  document.getElementById('commentText').value  = '';
   document.getElementById('commentWordCount').textContent = '0 / 100 kata';
   document.getElementById('commentError').textContent = '';
+  // Clean up modal image to free memory
+  const modalImg = document.getElementById('modalImg');
+  modalImg.src = '';
+  modalImg.style.display = '';
 }
 
 document.getElementById('modalClose').addEventListener('click', closeModal);
 document.getElementById('modalOverlay').addEventListener('click', e => { if(e.target===e.currentTarget) closeModal(); });
+
+// Close modal on back (mobile friendly)
+window.addEventListener('popstate', () => {
+  if(document.getElementById('modalOverlay').classList.contains('open')) closeModal();
+});
 
 // Modal copy
 document.getElementById('modalCopyBtn').addEventListener('click', async () => {
@@ -682,7 +856,7 @@ document.getElementById('modalCopyBtn').addEventListener('click', async () => {
 
 // Modal like
 document.getElementById('modalLikeBtn').addEventListener('click', () => {
-  const key = document.getElementById('modalOverlay').dataset.key;
+  const key    = document.getElementById('modalOverlay').dataset.key;
   const galBtn = document.querySelector(`.like-btn[data-key="${key}"]`);
   toggleLike(key, galBtn);
 });
@@ -730,17 +904,11 @@ document.getElementById('commentSubmit').addEventListener('click', async () => {
 
 // ===================== ADMIN CONSOLE HELPER =====================
 // Cara pakai: buka DevTools Console, ketik:
-//
-//   _admin.auth('SECRET_KAMU')          // set secret sekali saja per sesi
-//   _admin.listAll()                    // lihat semua gambar
-//   _admin.setNsfw('key.jpg', true)     // tandai NSFW
-//   _admin.setNsfw('key.jpg', false)    // lepas NSFW
-//   _admin.setName('key.jpg', 'Nama')   // ganti nama pengunggah
-//   _admin.deleteImage('key.jpg')       // hapus gambar + likes + komentar
-//   _admin.deleteComment('key.jpg', 'comment-uuid')  // hapus 1 komentar
-//   _admin.clearComments('key.jpg')     // hapus semua komentar gambar
-//   _admin.resetLikes('key.jpg')        // reset like ke 0
-//   _admin.help()                       // tampilkan bantuan ini
+//   _admin.auth('SECRET_KAMU')
+//   _admin.listAll()
+//   _admin.setNsfw('key.jpg', true)
+//   _admin.deleteImage('key.jpg')
+//   _admin.help()
 
 window._admin = (() => {
   let _secret = '';
@@ -750,7 +918,7 @@ window._admin = (() => {
       console.warn('%c[Admin] Belum set secret. Jalankan: _admin.auth("SECRET_KAMU")', 'color:#E8752C;font-weight:bold');
       return;
     }
-    const res = await fetch('/api/admin', {
+    const res  = await fetch('/api/admin', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ secret: _secret, action, payload }),
@@ -760,12 +928,11 @@ window._admin = (() => {
       console.error('%c[Admin] Error:', 'color:red;font-weight:bold', data.error || data);
     } else {
       console.log('%c[Admin] OK:', 'color:#3F5D54;font-weight:bold', data);
-      if (['set-nsfw','delete','set-name','reset-likes'].includes(action)) loadGallery();
+      if (['set-nsfw','delete','set-name','reset-likes'].includes(action)){ galleryPage=1; galleryImages=[]; loadGallery(); }
     }
     return data;
   }
 
-  // Jalankan satu action ke banyak key, tampilkan progress
   async function callMany(action, keys, extraPayload = {}) {
     if (!keys || !keys.length) { console.warn('[Admin] Array key kosong.'); return; }
     console.log(`%c[Admin] Memproses ${keys.length} gambar…`, 'color:#E8752C;font-weight:bold');
@@ -783,89 +950,38 @@ window._admin = (() => {
       results.push({ key, ok: res.ok, data });
     }
     console.log(`%c[Admin] Selesai. ${results.filter(r=>r.ok).length}/${keys.length} berhasil.`, 'color:#3F5D54;font-weight:bold');
-    loadGallery();
+    galleryPage=1; galleryImages=[]; loadGallery();
     return results;
   }
 
   return {
     auth(secret) { _secret = secret; console.log('%c[Admin] Secret tersimpan untuk sesi ini.', 'color:#3F5D54;font-weight:bold'); },
-
-    listAll() { return call('list-all'); },
-
+    listAll()             { return call('list-all'); },
     async keys() {
       const data = await call('list-all');
       if (!data || !data.images) return;
-      console.log(`%c[Admin] Total: ${data.total} gambar\n`, 'color:#3F5D54;font-weight:bold');
-      console.table(data.images.map((img, i) => ({
-        '#':        i + 1,
-        'Key/UUID': img.key,
-        'Nama':     img.name || '—',
-        'NSFW':     img.nsfw ? '⚠️ ya' : 'tidak',
-        'Upload':   img.uploaded ? new Date(img.uploaded).toLocaleString('id-ID') : '—',
-      })));
+      console.table(data.images.map((img, i) => ({ '#': i+1, 'Key/UUID': img.key, 'Nama': img.name||'—', 'NSFW': img.nsfw?'⚠️':'tidak', 'Upload': img.uploaded?new Date(img.uploaded).toLocaleString('id-ID'):'—' })));
       return data.images;
     },
-
-    // ── SINGLE ────────────────────────────────────────────
     setNsfw(key, nsfw)     { return call('set-nsfw', { key, nsfw }); },
     setName(key, name)     { return call('set-name', { key, name }); },
     deleteImage(key)       { return call('delete', { key }); },
     deleteComment(key, id) { return call('delete-comment', { key, commentId: id }); },
     clearComments(key)     { return call('clear-comments', { key }); },
     resetLikes(key)        { return call('reset-likes', { key }); },
-
-    // ── MULTIPLE (terima array key) ────────────────────────
-    // Contoh: _admin.setNsfwMany(["a.jpg","b.jpg"], true)
     setNsfwMany(keys, nsfw)  { return callMany('set-nsfw', keys, { nsfw }); },
     deleteMany(keys)          { return callMany('delete', keys); },
     clearCommentsMany(keys)   { return callMany('clear-comments', keys); },
     resetLikesMany(keys)      { return callMany('reset-likes', keys); },
-
-    // ── SHORTCUT: semua NSFW sekaligus ────────────────────
-    // _admin.setNsfwAll(true)  → tandai SEMUA gambar sebagai NSFW
-    // _admin.setNsfwAll(false) → lepas NSFW dari semua gambar
     async setNsfwAll(nsfw) {
       const data = await call('list-all');
       if (!data || !data.images) return;
-      const keys = data.images.map(i => i.key);
-      return callMany('set-nsfw', keys, { nsfw });
+      return callMany('set-nsfw', data.images.map(i => i.key), { nsfw });
     },
-
-    help() {
-      console.log(`%c
-╔════════════════════════════════════════════════════════╗
-║               KIRIM GAMBAR — ADMIN                     ║
-╠════════════════════════════════════════════════════════╣
-║  SETUP                                                 ║
-║    _admin.auth('secret')         set secret            ║
-║                                                        ║
-║  INFO                                                  ║
-║    _admin.keys()                 tabel UUID+info       ║
-║    _admin.listAll()              raw JSON semua        ║
-║                                                        ║
-║  SINGLE (satu gambar)                                  ║
-║    _admin.setNsfw("key", true)   tandai NSFW           ║
-║    _admin.setName("key", "nama") ganti nama            ║
-║    _admin.deleteImage("key")     hapus gambar          ║
-║    _admin.clearComments("key")   bersihkan komentar    ║
-║    _admin.resetLikes("key")      reset likes           ║
-║                                                        ║
-║  MULTIPLE (array of keys)                              ║
-║    _admin.setNsfwMany([...], true)  tandai banyak NSFW ║
-║    _admin.deleteMany([...])         hapus banyak       ║
-║    _admin.clearCommentsMany([...])  bersihkan komentar ║
-║    _admin.resetLikesMany([...])     reset likes        ║
-║                                                        ║
-║  SEMUA SEKALIGUS                                       ║
-║    _admin.setNsfwAll(true)       semua jadi NSFW       ║
-║    _admin.setNsfwAll(false)      lepas semua NSFW      ║
-╚════════════════════════════════════════════════════════╝
-      `, 'color:#E8752C;font-family:monospace;font-size:13px');
-    }
+    help() { console.log('%c\n╔══════════════════════════════════╗\n║   KIRIM GAMBAR — ADMIN HELPER    ║\n╠══════════════════════════════════╣\n║  _admin.auth("secret")           ║\n║  _admin.keys()                   ║\n║  _admin.listAll()                ║\n║  _admin.setNsfw("key", true)     ║\n║  _admin.setName("key", "nama")   ║\n║  _admin.deleteImage("key")       ║\n║  _admin.clearComments("key")     ║\n║  _admin.resetLikes("key")        ║\n╚══════════════════════════════════╝', 'color:#E8752C;font-family:monospace'); }
   };
 })();
 
-// Print hint on load
 console.log('%c[Kirim Gambar] Admin tersedia. Ketik _admin.help() untuk bantuan.', 'color:#847C70;font-size:11px');
 
 // ===================== INIT =====================
