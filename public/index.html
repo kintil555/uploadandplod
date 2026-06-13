@@ -237,10 +237,11 @@
     width:100%; padding:11px 16px; border-radius:8px; border:1.5px solid var(--border);
     background:var(--surface); color:var(--ink); font-family:'Space Grotesk',sans-serif;
     font-weight:600; font-size:14px; cursor:pointer; transition:all .15s ease;
-    margin-bottom:16px; text-decoration:none;
+    margin-bottom:16px;
   }
   .modal-download-btn:hover{ border-color:var(--accent2); color:var(--accent2); background:rgba(63,93,84,.06); }
   .modal-download-btn svg{ width:16px; height:16px; stroke:currentColor; flex-shrink:0; }
+  .modal-download-btn:disabled{ opacity:.5; cursor:default; }
 
   /* Comments */
   .comments-title{ font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:700; margin:0 0 12px; }
@@ -471,14 +472,14 @@
       </div>
 
       <!-- Tombol Download -->
-      <a class="modal-download-btn" id="modalDownloadBtn" href="#" download>
+      <button class="modal-download-btn" id="modalDownloadBtn">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
           <polyline points="7 10 12 15 17 10"/>
           <line x1="12" y1="15" x2="12" y2="3"/>
         </svg>
         Unduh Gambar
-      </a>
+      </button>
 
       <!-- Komentar -->
       <p class="comments-title">Komentar</p>
@@ -876,11 +877,13 @@ async function openModal(img){
   document.getElementById('modalUrl').textContent      = img.url;
   document.getElementById('modalUrl').dataset.url      = img.url;
 
-  // Set download link — pakai ?download=1 agar server kirim Content-Disposition attachment
+  // Set download button
   const dlBtn = document.getElementById('modalDownloadBtn');
-  dlBtn.href = img.url + '?download=1';
-  // Ekstrak filename dari key untuk atribut download
-  dlBtn.setAttribute('download', img.key);
+  dlBtn._imgData = img; // simpan data untuk dipakai saat klik
+  dlBtn.style.display = '';
+  dlBtn.disabled = false;
+  dlBtn.textContent = '';
+  dlBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Unduh Gambar`;
 
   // Load image with skeleton + error handling
   modalImg.onload  = () => { imgWrap.classList.add('loaded'); modalImg.classList.add('ready'); };
@@ -888,7 +891,7 @@ async function openModal(img){
     imgWrap.classList.add('error');
     imgWrap.classList.remove('loaded');
     modalImg.style.display = 'none';
-    dlBtn.style.display    = 'none'; // Hide download if image broken
+    document.getElementById('modalDownloadBtn').style.display = 'none';
   };
   modalImg.src = img.url;
 
@@ -975,6 +978,44 @@ document.getElementById('modalLikeBtn').addEventListener('click', () => {
   const key    = document.getElementById('modalOverlay').dataset.key;
   const galBtn = document.querySelector(`.like-btn[data-key="${key}"]`);
   toggleLike(key, galBtn);
+});
+
+// Download via fetch+blob (hindari masalah format corrupt dari <a download>)
+document.getElementById('modalDownloadBtn').addEventListener('click', async () => {
+  const btn     = document.getElementById('modalDownloadBtn');
+  const imgData = btn._imgData;
+  if(!imgData) return;
+
+  btn.disabled = true;
+  btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Mengunduh…`;
+
+  try {
+    const res  = await fetch(imgData.url);
+    if(!res.ok) throw new Error('Fetch gagal');
+    const blob = await res.blob();
+
+    // Tentukan ekstensi dari blob type atau key
+    const extMap = { 'image/jpeg':'jpg','image/png':'png','image/gif':'gif','image/webp':'webp','image/avif':'avif','image/svg+xml':'svg' };
+    const ext    = extMap[blob.type] || imgData.key.split('.').pop() || 'jpg';
+    const safeName = (imgData.name || 'gambar').replace(/[^a-zA-Z0-9_\-]/g, '_').slice(0, 40);
+    const filename = `${safeName}.${ext}`;
+
+    const objectUrl = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href     = objectUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(objectUrl), 5000);
+
+    showToast('Gambar berhasil diunduh!');
+  } catch {
+    showToast('Gagal mengunduh, coba lagi.');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Unduh Gambar`;
+  }
 });
 
 // Comment word counter
