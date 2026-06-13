@@ -984,8 +984,11 @@ document.getElementById('modalLikeBtn').addEventListener('click', () => {
   toggleLike(key, galBtn);
 });
 
-// Download via fetch+blob (hindari masalah format corrupt dari <a download>)
-document.getElementById('modalDownloadBtn').addEventListener('click', async () => {
+// Download via endpoint server (?download=1) — Content-Disposition: attachment
+// dari server lebih reliable di mobile (a.download pada blob URL tidak
+// didukung dengan benar di Safari iOS / banyak browser mobile, sehingga
+// hasil unduhan jadi rusak/salah format).
+document.getElementById('modalDownloadBtn').addEventListener('click', () => {
   const btn     = document.getElementById('modalDownloadBtn');
   const imgData = btn._imgData;
   if(!imgData) return;
@@ -994,24 +997,19 @@ document.getElementById('modalDownloadBtn').addEventListener('click', async () =
   btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Mengunduh…`;
 
   try {
-    const res  = await fetch(imgData.url);
-    if(!res.ok) throw new Error('Fetch gagal');
-    const blob = await res.blob();
+    const base = imgData.url;
+    const downloadUrl = base + (base.includes('?') ? '&' : '?') + 'download=1';
 
-    // Tentukan ekstensi dari blob type atau key
-    const extMap = { 'image/jpeg':'jpg','image/png':'png','image/gif':'gif','image/webp':'webp','image/avif':'avif','image/svg+xml':'svg' };
-    const ext    = extMap[blob.type] || imgData.key.split('.').pop() || 'jpg';
-    const safeName = (imgData.name || 'gambar').replace(/[^a-zA-Z0-9_\-]/g, '_').slice(0, 40);
-    const filename = `${safeName}.${ext}`;
-
-    const objectUrl = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href     = objectUrl;
-    a.download = filename;
+    a.href = downloadUrl;
+    a.rel  = 'noopener';
+    // 'download' tetap diset sebagai hint untuk browser yang mendukungnya;
+    // browser yang tidak mendukung akan tetap menghormati header
+    // Content-Disposition: attachment dari server.
+    a.download = '';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(objectUrl), 5000);
 
     showToast('Gambar berhasil diunduh!');
   } catch {
