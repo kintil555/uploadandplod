@@ -2,12 +2,13 @@ name = "kirim-gambar"
 compatibility_date = "2024-09-23"
 pages_build_output_dir = "public"
 
-# Binding KV namespace supaya functions/ bisa mengakses env.IMAGE_KV.
-# Setelah namespace dibuat di dashboard Cloudflare (Workers & Pages > KV),
-# isi "id" di bawah dengan ID namespace tersebut.
-# Untuk deploy via GitHub + Pages dashboard, binding yang sama juga
-# harus ditambahkan manual di:
-# Pages project > Settings > Functions > KV namespace bindings
-[[kv_namespaces]]
-binding = "IMAGE_KV"
-id = "GANTI_DENGAN_ID_KV_NAMESPACE"
+# Binding KV namespace (IMAGE_KV) untuk deploy via GitHub + Pages dashboard
+# diatur di: Pages project > Settings > Functions > KV namespace bindings.
+#
+# Kalau mau pakai `wrangler pages dev` untuk testing lokal, buat namespace
+# dulu dengan `wrangler kv namespace create kirim-gambar-images`, lalu
+# tambahkan blok berikut dengan id yang dihasilkan:
+#
+# [[kv_namespaces]]
+# binding = "IMAGE_KV"
+# id = "ID_HASIL_DARI_WRANGLER"
