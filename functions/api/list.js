@@ -9,6 +9,7 @@ export async function onRequestGet(context) {
   const url    = new URL(request.url);
   const page   = Math.max(1, parseInt(url.searchParams.get('page') || '1'));
   const limit  = Math.min(24, Math.max(1, parseInt(url.searchParams.get('limit') || '12')));
+  const showNsfw = url.searchParams.get('nsfw') === '1';
   const origin = url.origin;
 
   try {
@@ -29,6 +30,7 @@ export async function onRequestGet(context) {
         name:     (k.metadata && k.metadata.name) || '',
         nsfw:     !!(k.metadata && k.metadata.nsfw),
       }))
+      .filter(img => showNsfw || !img.nsfw)  // sembunyikan NSFW kalau toggle off
       .sort((a, b) => new Date(b.uploaded || 0) - new Date(a.uploaded || 0));
 
     const total   = sorted.length;
