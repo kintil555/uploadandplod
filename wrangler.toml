@@ -5,10 +5,6 @@ pages_build_output_dir = "public"
 # Binding KV namespace (IMAGE_KV) untuk deploy via GitHub + Pages dashboard
 # diatur di: Pages project > Settings > Functions > KV namespace bindings.
 #
-# Kalau mau pakai `wrangler pages dev` untuk testing lokal, buat namespace
-# dulu dengan `wrangler kv namespace create kirim-gambar-images`, lalu
-# tambahkan blok berikut dengan id yang dihasilkan:
-#
-# [[kv_namespaces]]
-# binding = "IMAGE_KV"
-# id = "ID_HASIL_DARI_WRANGLER"
+[[kv_namespaces]]
+binding = "IMAGE_KV"
+id = "46c8102882284a09b46f9f40df59fa38"
