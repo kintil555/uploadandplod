@@ -134,6 +134,24 @@
 
   .empty-gallery{ grid-column:1/-1; text-align:center; padding:36px 12px; color:var(--ink-soft); font-size:13px; border:1px dashed var(--border); border-radius:10px; }
 
+  /* NSFW blur */
+  .frame.nsfw .frame-img{ filter:blur(16px); }
+  .frame.nsfw .nsfw-overlay{ display:flex; }
+  .nsfw-overlay{ display:none; position:absolute; inset:0; align-items:center; justify-content:center; flex-direction:column; gap:4px; background:rgba(33,31,27,0.45); cursor:pointer; }
+  .nsfw-badge{ background:#c0392b; color:#fff; font-family:'Space Mono',monospace; font-size:10px; font-weight:700; padding:3px 9px; border-radius:4px; letter-spacing:.08em; }
+  .nsfw-tap{ font-size:11px; color:rgba(255,255,255,0.75); font-family:'Inter',sans-serif; }
+  .frame.nsfw-revealed .frame-img{ filter:none; }
+  .frame.nsfw-revealed .nsfw-overlay{ display:none; }
+
+  /* NSFW modal warning */
+  .modal-nsfw-bar{ display:none; align-items:center; gap:10px; background:#fdf0ee; border:1px solid #e5b4ae; border-radius:8px; padding:10px 14px; margin-bottom:14px; }
+  .modal-nsfw-bar.show{ display:flex; }
+  .modal-nsfw-bar .nsfw-badge{ flex-shrink:0; }
+  .modal-nsfw-bar span{ font-size:12px; color:#7a3228; font-family:'Inter',sans-serif; flex:1; }
+  .modal-nsfw-bar button{ font-size:12px; font-family:'Space Grotesk',sans-serif; font-weight:600; background:#c0392b; color:#fff; border:none; border-radius:6px; padding:5px 12px; cursor:pointer; flex-shrink:0; }
+  .modal-img.nsfw-blur{ filter:blur(20px); transition:filter .3s; }
+  .modal-img.nsfw-blur.revealed{ filter:none; }
+
   /* Toast */
   .toast{ position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--negative); color:var(--paper-text); font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:600; padding:12px 20px; border-radius:999px; box-shadow:var(--shadow); opacity:0; pointer-events:none; transition:opacity .2s ease, transform .2s ease; z-index:100; }
   .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
@@ -294,6 +312,11 @@
       <button class="modal-close" id="modalClose">&times;</button>
     </div>
     <div class="modal-body">
+      <div class="modal-nsfw-bar" id="modalNsfwBar">
+        <span class="nsfw-badge">NSFW</span>
+        <span>Gambar ini ditandai mengandung konten dewasa.</span>
+        <button id="modalNsfwReveal">Tampilkan</button>
+      </div>
       <img class="modal-img" id="modalImg" alt="" />
       <div class="modal-meta">
         <div>
@@ -484,9 +507,10 @@ async function loadGallery(){
     }
 
     grid.innerHTML = galleryImages.map((img, i) => `
-      <div class="frame" data-key="${img.key}" data-index="${i}">
+      <div class="frame${img.nsfw ? ' nsfw' : ''}" data-key="${img.key}" data-index="${i}">
         <span class="frame-num">${String(galleryImages.length-i).padStart(2,'0')}</span>
         <img class="frame-img" src="${img.url}" alt="Gambar ${i+1}" loading="lazy" />
+        ${img.nsfw ? `<div class="nsfw-overlay"><span class="nsfw-badge">NSFW</span><span class="nsfw-tap">tap untuk lihat</span></div>` : ''}
         <div class="frame-footer">
           <span class="frame-uploader">${img.name ? escHtml(img.name) : '&mdash;'}</span>
           <button class="like-btn" data-key="${img.key}" data-count="${img.likes||0}" title="Suka">
@@ -497,10 +521,20 @@ async function loadGallery(){
       </div>
     `).join('');
 
-    // Click on image → open modal
+    // Click on image → open modal (skip if clicking like-btn)
     grid.querySelectorAll('.frame').forEach(frame => {
+      // NSFW overlay: tap to reveal
+      const nsfwOverlay = frame.querySelector('.nsfw-overlay');
+      if (nsfwOverlay) {
+        nsfwOverlay.addEventListener('click', e => {
+          e.stopPropagation();
+          frame.classList.add('nsfw-revealed');
+        });
+      }
       frame.addEventListener('click', e => {
         if(e.target.closest('.like-btn')) return;
+        // If NSFW and not revealed yet, let overlay handle it
+        if(frame.classList.contains('nsfw') && !frame.classList.contains('nsfw-revealed')) return;
         const idx = parseInt(frame.dataset.index);
         openModal(galleryImages[idx]);
       });
@@ -555,7 +589,18 @@ async function openModal(img){
   const overlay = document.getElementById('modalOverlay');
   overlay.dataset.key = img.key;
 
-  document.getElementById('modalImg').src = img.url;
+  const modalImg = document.getElementById('modalImg');
+  modalImg.src = img.url;
+  // NSFW blur on modal image
+  const nsfwBar = document.getElementById('modalNsfwBar');
+  if (img.nsfw) {
+    modalImg.classList.add('nsfw-blur');
+    nsfwBar.classList.add('show');
+  } else {
+    modalImg.classList.remove('nsfw-blur', 'revealed');
+    nsfwBar.classList.remove('show');
+  }
+
   document.getElementById('modalTitle').textContent = img.name ? `Foto dari ${img.name}` : 'Detail Gambar';
   document.getElementById('modalUploader').textContent = img.name || 'Anonim';
   document.getElementById('modalDate').textContent = fmtDate(img.uploaded);
@@ -579,6 +624,13 @@ async function openModal(img){
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
+
+// NSFW reveal button in modal
+document.getElementById('modalNsfwReveal').addEventListener('click', () => {
+  const img = document.getElementById('modalImg');
+  img.classList.add('revealed');
+  document.getElementById('modalNsfwBar').classList.remove('show');
+});
 
 async function loadComments(key){
   const list = document.getElementById('commentList');
@@ -675,6 +727,74 @@ document.getElementById('commentSubmit').addEventListener('click', async () => {
   } catch { errEl.textContent='Koneksi gagal.'; }
   finally { btn.disabled=false; btn.textContent='Kirim komentar'; }
 });
+
+// ===================== ADMIN CONSOLE HELPER =====================
+// Cara pakai: buka DevTools Console, ketik:
+//
+//   _admin.auth('SECRET_KAMU')          // set secret sekali saja per sesi
+//   _admin.listAll()                    // lihat semua gambar
+//   _admin.setNsfw('key.jpg', true)     // tandai NSFW
+//   _admin.setNsfw('key.jpg', false)    // lepas NSFW
+//   _admin.setName('key.jpg', 'Nama')   // ganti nama pengunggah
+//   _admin.deleteImage('key.jpg')       // hapus gambar + likes + komentar
+//   _admin.deleteComment('key.jpg', 'comment-uuid')  // hapus 1 komentar
+//   _admin.clearComments('key.jpg')     // hapus semua komentar gambar
+//   _admin.resetLikes('key.jpg')        // reset like ke 0
+//   _admin.help()                       // tampilkan bantuan ini
+
+window._admin = (() => {
+  let _secret = '';
+
+  async function call(action, payload = {}) {
+    if (!_secret) {
+      console.warn('%c[Admin] Belum set secret. Jalankan: _admin.auth("SECRET_KAMU")', 'color:#E8752C;font-weight:bold');
+      return;
+    }
+    const res = await fetch('/api/admin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ secret: _secret, action, payload }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      console.error('%c[Admin] Error:', 'color:red;font-weight:bold', data.error || data);
+    } else {
+      console.log('%c[Admin] OK:', 'color:#3F5D54;font-weight:bold', data);
+      if (['set-nsfw','delete','set-name','reset-likes'].includes(action)) loadGallery();
+    }
+    return data;
+  }
+
+  return {
+    auth(secret)              { _secret = secret; console.log('%c[Admin] Secret tersimpan untuk sesi ini.', 'color:#3F5D54;font-weight:bold'); },
+    listAll()                 { return call('list-all'); },
+    setNsfw(key, nsfw)        { return call('set-nsfw', { key, nsfw }); },
+    setName(key, name)        { return call('set-name', { key, name }); },
+    deleteImage(key)          { return call('delete', { key }); },
+    deleteComment(key, id)    { return call('delete-comment', { key, commentId: id }); },
+    clearComments(key)        { return call('clear-comments', { key }); },
+    resetLikes(key)           { return call('reset-likes', { key }); },
+    help() {
+      console.log(`%c
+╔══════════════════════════════════════════════╗
+║            KIRIM GAMBAR — ADMIN              ║
+╠══════════════════════════════════════════════╣
+║  _admin.auth('secret')      set secret       ║
+║  _admin.listAll()           daftar semua     ║
+║  _admin.setNsfw(key, bool)  tandai NSFW      ║
+║  _admin.setName(key, name)  ganti nama       ║
+║  _admin.deleteImage(key)    hapus gambar     ║
+║  _admin.deleteComment(k,id) hapus komentar   ║
+║  _admin.clearComments(key)  bersihkan komen  ║
+║  _admin.resetLikes(key)     reset likes      ║
+╚══════════════════════════════════════════════╝
+      `, 'color:#E8752C;font-family:monospace;font-size:13px');
+    }
+  };
+})();
+
+// Print hint on load
+console.log('%c[Kirim Gambar] Admin tersedia. Ketik _admin.help() untuk bantuan.', 'color:#847C70;font-size:11px');
 
 // ===================== INIT =====================
 loadGallery();

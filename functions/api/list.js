@@ -30,6 +30,7 @@ export async function onRequestGet(context) {
         size:     k.metadata && k.metadata.size,
         name:     (k.metadata && k.metadata.name) || '',
         likes:    likeCounts[i],
+        nsfw:     !!(k.metadata && k.metadata.nsfw),
       }))
       .sort((a, b) => new Date(b.uploaded || 0) - new Date(a.uploaded || 0))
       .slice(0, 24);
