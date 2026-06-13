@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Kirim Gambar — upload &amp; bagikan link instan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F4EFE6;
+    --surface: #FCF8F1;
+    --ink: #2A2722;
+    --ink-soft: #847C70;
+    --accent: #E8752C;
+    --accent-soft: #FBE3D0;
+    --accent2: #3F5D54;
+    --negative: #211F1B;
+    --negative-edge: #34302A;
+    --paper-text: #F4EFE6;
+    --border: #E2D8C6;
+    --radius: 14px;
+    --shadow: 0 8px 24px rgba(42,39,34,0.06);
+  }
+
+  *{ box-sizing: border-box; }
+
+  html, body{ margin:0; padding:0; }
+
+  body{
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap{
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    display:flex;
+    align-items:flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+
+  .brand{
+    display:flex;
+    align-items:center;
+    gap: 12px;
+  }
+
+  .brand-mark{
+    width: 38px;
+    height: 38px;
+    border-radius: 9px;
+    background: var(--negative);
+    position: relative;
+    flex-shrink:0;
+  }
+  .brand-mark::before, .brand-mark::after{
+    content:'';
+    position:absolute;
+    width: 9px;
+    height: 9px;
+    border-radius: 2px;
+    background: var(--accent);
+  }
+  .brand-mark::before{ top: 7px; left: 7px; }
+  .brand-mark::after{ bottom: 7px; right: 7px; background: var(--paper-text); opacity:.5; }
+
+  .brand h1{
+    font-family:'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  .brand p{
+    margin: 2px 0 0;
+    font-size: 13px;
+    color: var(--ink-soft);
+    font-family:'Space Mono', monospace;
+  }
+
+  .tagline{
+    max-width: 280px;
+    font-size: 14px;
+    color: var(--ink-soft);
+    text-align: right;
+  }
+  @media (max-width: 600px){
+    .tagline{ display:none; }
+  }
+
+  /* ---------- Tabs ---------- */
+  .tabs{
+    display:flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .tab-btn{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all .15s ease;
+  }
+  .tab-btn.active{
+    background: var(--negative);
+    color: var(--paper-text);
+    border-color: var(--negative);
+  }
+  .tab-btn:not(.active):hover{
+    border-color: var(--accent);
+    color: var(--ink);
+  }
+
+  /* ---------- Panel (the "negative" / light-table) ---------- */
+  .panel{
+    background: var(--negative);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .sprockets{
+    display:flex;
+    justify-content: space-around;
+    padding: 10px 18px;
+  }
+  .sprockets span{
+    width: 12px;
+    height: 8px;
+    border-radius: 2px;
+    background: var(--negative-edge);
+  }
+
+  .panel-body{
+    padding: 8px 28px 32px;
+  }
+
+  /* Dropzone */
+  .dropzone{
+    border: 1.5px dashed #4A453C;
+    border-radius: 10px;
+    padding: 48px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color .2s ease, background .2s ease;
+  }
+  .dropzone.drag{
+    border-color: var(--accent);
+    background: rgba(232,117,44,0.08);
+  }
+  .dropzone-icon{
+    width: 46px;
+    height: 46px;
+    margin: 0 auto 16px;
+    border: 1.5px solid #5C5648;
+    border-radius: 8px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .dropzone-icon svg{ width: 22px; height: 22px; stroke: var(--accent); }
+  .dropzone h3{
+    font-family:'Space Grotesk', sans-serif;
+    color: var(--paper-text);
+    font-size: 17px;
+    margin: 0 0 6px;
+    font-weight: 600;
+  }
+  .dropzone p{
+    color: #A89E8F;
+    font-size: 13px;
+    margin: 0;
+  }
+  .dropzone p span{
+    color: var(--accent);
+    text-decoration: underline;
+  }
+
+  /* Link form */
+  .link-form{
+    display:flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 36px 4px 4px;
+  }
+  .link-form label{
+    font-family:'Space Mono', monospace;
+    font-size: 12px;
+    color: #A89E8F;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+  .link-row{
+    display:flex;
+    gap: 10px;
+  }
+  .link-row input{
+    flex:1;
+    background: var(--negative-edge);
+    border: 1px solid #4A453C;
+    border-radius: 8px;
+    color: var(--paper-text);
+    padding: 13px 14px;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color .15s ease;
+  }
+  .link-row input::placeholder{ color: #786F62; }
+  .link-row input:focus{ border-color: var(--accent); }
+
+  .btn{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 13px 22px;
+    border-radius: 8px;
+    border: none;
+    background: var(--accent);
+    color: #1A130A;
+    cursor: pointer;
+    transition: filter .15s ease, transform .1s ease;
+    white-space: nowrap;
+  }
+  .btn:hover{ filter: brightness(1.08); }
+  .btn:active{ transform: scale(.98); }
+  .btn:disabled{ opacity: .5; cursor: default; }
+
+  .hint{
+    font-size: 12px;
+    color: #786F62;
+  }
+
+  /* Progress */
+  .progress-wrap{
+    display:none;
+    margin-top: 20px;
+  }
+  .progress-wrap.show{ display:block; }
+  .progress-bar{
+    height: 6px;
+    border-radius: 999px;
+    background: var(--negative-edge);
+    overflow: hidden;
+  }
+  .progress-fill{
+    height: 100%;
+    width: 0%;
+    background: var(--accent);
+    transition: width .15s ease;
+  }
+  .progress-label{
+    font-family:'Space Mono', monospace;
+    font-size: 12px;
+    color: #A89E8F;
+    margin-top: 8px;
+  }
+
+  /* Result */
+  .result{
+    display:none;
+    margin-top: 22px;
+    background: var(--negative-edge);
+    border: 1px solid #4A453C;
+    border-radius: 10px;
+    padding: 16px;
+    gap: 16px;
+    align-items: center;
+  }
+  .result.show{ display:flex; }
+  .result img{
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+  .result-info{ flex:1; min-width:0; }
+  .result-info .label{
+    font-family:'Space Mono', monospace;
+    font-size: 11px;
+    color: #A89E8F;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-bottom: 4px;
+  }
+  .result-link{
+    font-family:'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--paper-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .copy-btn{
+    background: transparent;
+    border: 1px solid #5C5648;
+    color: var(--paper-text);
+    font-family:'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 9px 16px;
+    border-radius: 7px;
+    cursor: pointer;
+    flex-shrink:0;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .copy-btn:hover{ border-color: var(--accent); background: rgba(232,117,44,0.08); }
+  .copy-btn.copied{ border-color: var(--accent2); color: var(--accent2); }
+
+  .error-msg{
+    display:none;
+    margin-top: 16px;
+    color: #E8752C;
+    font-size: 13px;
+    font-family: 'Space Mono', monospace;
+    background: rgba(232,117,44,0.1);
+    border: 1px solid rgba(232,117,44,0.3);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .error-msg.show{ display:block; }
+
+  /* ---------- Gallery ---------- */
+  .gallery-section{
+    margin-top: 56px;
+  }
+  .gallery-head{
+    display:flex;
+    align-items:baseline;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+  .gallery-head h2{
+    font-family:'Space Grotesk', sans-serif;
+    font-size: 17px;
+    margin: 0;
+  }
+  .gallery-head span{
+    font-family:'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+
+  .gallery-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 14px;
+  }
+
+  .frame{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .frame:hover{
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+  }
+  .frame .frame-img{
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    display: block;
+    background: var(--accent-soft);
+  }
+  .frame-num{
+    position:absolute;
+    top: 8px;
+    left: 8px;
+    background: rgba(33,31,27,0.78);
+    color: var(--paper-text);
+    font-family:'Space Mono', monospace;
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 5px;
+    letter-spacing: .04em;
+  }
+
+  .empty-gallery{
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 36px 12px;
+    color: var(--ink-soft);
+    font-size: 13px;
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+  }
+
+  /* ---------- Toast ---------- */
+  .toast{
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--negative);
+    color: var(--paper-text);
+    font-family:'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 12px 20px;
+    border-radius: 999px;
+    box-shadow: var(--shadow);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+    z-index: 50;
+  }
+  .toast.show{
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  footer{
+    margin-top: 64px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* tab panels */
+  [data-panel]{ display:none; }
+  [data-panel].active{ display:block; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <div class="brand-mark"></div>
+      <div>
+        <h1>Kirim Gambar</h1>
+        <p>upload.example &mdash; link instan</p>
+      </div>
+    </div>
+    <p class="tagline">Tarik file ke kotak gelap di bawah, atau tempel link gambar &mdash; dapatkan link siap pakai dalam sekejap.</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="file">Dari Perangkat</button>
+    <button class="tab-btn" data-tab="link">Dari Link</button>
+  </div>
+
+  <div class="panel">
+    <div class="sprockets">
+      <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <div class="panel-body">
+
+      <div data-panel="file" class="active">
+        <div class="dropzone" id="dropzone">
+          <div class="dropzone-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 16V4"/>
+              <path d="M5 11l7-7 7 7"/>
+              <path d="M4 20h16"/>
+            </svg>
+          </div>
+          <h3>Lepas gambar di sini</h3>
+          <p>atau <span>klik untuk pilih file</span> &mdash; JPG, PNG, GIF, WEBP, maks 10MB</p>
+        </div>
+        <input type="file" id="fileInput" accept="image/*" hidden />
+      </div>
+
+      <div data-panel="link">
+        <div class="link-form">
+          <div>
+            <label for="urlInput">URL gambar</label>
+            <div class="link-row" style="margin-top:8px">
+              <input type="url" id="urlInput" placeholder="https://contoh.com/gambar.jpg" />
+              <button class="btn" id="urlSubmit">Ambil &amp; simpan</button>
+            </div>
+          </div>
+          <p class="hint">Gambar dari link akan diunduh dan disimpan ulang, jadi link hasilnya tetap aktif meski link asal mati.</p>
+        </div>
+      </div>
+
+      <div class="progress-wrap" id="progressWrap">
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-label" id="progressLabel">Mengunggah&hellip;</div>
+      </div>
+
+      <div class="error-msg" id="errorMsg"></div>
+
+      <div class="result" id="result">
+        <img id="resultImg" alt="Pratinjau gambar" />
+        <div class="result-info">
+          <div class="label">Link kamu</div>
+          <div class="result-link" id="resultLink"></div>
+        </div>
+        <button class="copy-btn" id="copyBtn">Salin link</button>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="gallery-section">
+    <div class="gallery-head">
+      <h2>Galeri terbaru</h2>
+      <span id="galleryCount"></span>
+    </div>
+    <div class="gallery-grid" id="galleryGrid">
+      <div class="empty-gallery">Memuat galeri&hellip;</div>
+    </div>
+  </div>
+
+  <footer>dibuat dengan Cloudflare Pages + R2</footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ---------- Tabs ----------
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const panels = document.querySelectorAll('[data-panel]');
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabBtns.forEach(b => b.classList.remove('active'));
+      panels.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelector(`[data-panel="${btn.dataset.tab}"]`).classList.add('active');
+      hideError();
+    });
+  });
+
+  // ---------- Elements ----------
+  const dropzone = document.getElementById('dropzone');
+  const fileInput = document.getElementById('fileInput');
+  const urlInput = document.getElementById('urlInput');
+  const urlSubmit = document.getElementById('urlSubmit');
+  const progressWrap = document.getElementById('progressWrap');
+  const progressFill = document.getElementById('progressFill');
+  const progressLabel = document.getElementById('progressLabel');
+  const result = document.getElementById('result');
+  const resultImg = document.getElementById('resultImg');
+  const resultLink = document.getElementById('resultLink');
+  const copyBtn = document.getElementById('copyBtn');
+  const errorMsg = document.getElementById('errorMsg');
+  const toast = document.getElementById('toast');
+  const galleryGrid = document.getElementById('galleryGrid');
+  const galleryCount = document.getElementById('galleryCount');
+
+  const MAX_SIZE = 10 * 1024 * 1024;
+
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2200);
+  }
+
+  function showError(msg){
+    errorMsg.textContent = msg;
+    errorMsg.classList.add('show');
+  }
+  function hideError(){
+    errorMsg.classList.remove('show');
+  }
+
+  function resetProgress(){
+    progressWrap.classList.remove('show');
+    progressFill.style.width = '0%';
+  }
+
+  function showResult(url, previewSrc){
+    result.classList.add('show');
+    resultImg.src = previewSrc;
+    resultLink.textContent = url;
+    resultLink.dataset.url = url;
+  }
+
+  // ---------- Dropzone interactions ----------
+  dropzone.addEventListener('click', () => fileInput.click());
+
+  ['dragenter','dragover'].forEach(evt =>
+    dropzone.addEventListener(evt, e => {
+      e.preventDefault();
+      dropzone.classList.add('drag');
+    })
+  );
+  ['dragleave','drop'].forEach(evt =>
+    dropzone.addEventListener(evt, e => {
+      e.preventDefault();
+      dropzone.classList.remove('drag');
+    })
+  );
+  dropzone.addEventListener('drop', e => {
+    const file = e.dataTransfer.files[0];
+    if (file) handleFile(file);
+  });
+  fileInput.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (file) handleFile(file);
+  });
+
+  // ---------- Upload from device ----------
+  function handleFile(file){
+    hideError();
+    result.classList.remove('show');
+
+    if (!file.type.startsWith('image/')){
+      showError('Berkas harus berupa gambar (JPG, PNG, GIF, WEBP, dll).');
+      return;
+    }
+    if (file.size > MAX_SIZE){
+      showError('Ukuran gambar maksimal 10MB.');
+      return;
+    }
+
+    const localPreview = URL.createObjectURL(file);
+
+    progressWrap.classList.add('show');
+    progressFill.style.width = '0%';
+    progressLabel.textContent = 'Mengunggah\u2026 0%';
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/api/upload');
+
+    xhr.upload.onprogress = e => {
+      if (e.lengthComputable){
+        const pct = Math.round((e.loaded / e.total) * 100);
+        progressFill.style.width = pct + '%';
+        progressLabel.textContent = `Mengunggah\u2026 ${pct}%`;
+      }
+    };
+
+    xhr.onload = () => {
+      resetProgress();
+      try{
+        const data = JSON.parse(xhr.responseText);
+        if (xhr.status >= 200 && xhr.status < 300 && data.success){
+          showResult(data.url, localPreview);
+          loadGallery();
+        } else {
+          showError(data.error || 'Gagal mengunggah gambar.');
+        }
+      } catch {
+        showError('Terjadi kesalahan saat memproses respons server.');
+      }
+    };
+    xhr.onerror = () => {
+      resetProgress();
+      showError('Koneksi gagal. Coba lagi.');
+    };
+    xhr.send(formData);
+  }
+
+  // ---------- Upload from URL ----------
+  urlSubmit.addEventListener('click', async () => {
+    const url = urlInput.value.trim();
+    hideError();
+    result.classList.remove('show');
+
+    if (!url){
+      showError('Masukkan link gambar terlebih dahulu.');
+      return;
+    }
+    try { new URL(url); } catch {
+      showError('Link tidak valid.');
+      return;
+    }
+
+    urlSubmit.disabled = true;
+    progressWrap.classList.add('show');
+    progressFill.style.width = '60%';
+    progressLabel.textContent = 'Mengambil gambar dari link\u2026';
+
+    try{
+      const res = await fetch('/api/link', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url })
+      });
+      const data = await res.json();
+      resetProgress();
+      if (res.ok && data.success){
+        showResult(data.url, url);
+        urlInput.value = '';
+        loadGallery();
+      } else {
+        showError(data.error || 'Gagal mengambil gambar dari link.');
+      }
+    } catch {
+      resetProgress();
+      showError('Koneksi gagal. Coba lagi.');
+    } finally {
+      urlSubmit.disabled = false;
+    }
+  });
+
+  // ---------- Copy link ----------
+  copyBtn.addEventListener('click', async () => {
+    const url = resultLink.dataset.url;
+    try{
+      await navigator.clipboard.writeText(url);
+      copyBtn.textContent = 'Tersalin!';
+      copyBtn.classList.add('copied');
+      showToast('Link disalin ke clipboard');
+      setTimeout(() => {
+        copyBtn.textContent = 'Salin link';
+        copyBtn.classList.remove('copied');
+      }, 1800);
+    } catch {
+      showToast('Tidak bisa menyalin otomatis, salin manual ya');
+    }
+  });
+
+  // ---------- Gallery ----------
+  async function loadGallery(){
+    try{
+      const res = await fetch('/api/list');
+      const data = await res.json();
+      const images = data.images || [];
+
+      galleryCount.textContent = images.length
+        ? `${images.length} gambar`
+        : '';
+
+      if (!images.length){
+        galleryGrid.innerHTML = '<div class="empty-gallery">Belum ada gambar. Jadilah yang pertama mengunggah!</div>';
+        return;
+      }
+
+      galleryGrid.innerHTML = images.map((img, i) => `
+        <a class="frame" href="${img.url}" target="_blank" rel="noopener">
+          <span class="frame-num">${String(images.length - i).padStart(2,'0')}</span>
+          <img class="frame-img" src="${img.url}" alt="Gambar unggahan ${i + 1}" loading="lazy" />
+        </a>
+      `).join('');
+    } catch {
+      galleryGrid.innerHTML = '<div class="empty-gallery">Galeri tidak dapat dimuat saat ini.</div>';
+    }
+  }
+
+  loadGallery();
+</script>
+</body>
+</html>

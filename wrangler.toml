@@ -1,0 +1,13 @@
+name = "kirim-gambar"
+compatibility_date = "2024-09-23"
+pages_build_output_dir = "public"
+
+# Binding R2 bucket supaya functions/ bisa mengakses env.IMAGE_BUCKET.
+# Setelah bucket dibuat di dashboard Cloudflare (R2 > Create bucket),
+# isi "bucket_name" di bawah dengan nama bucket tersebut.
+# Untuk deploy via GitHub + Pages dashboard, binding yang sama juga
+# harus ditambahkan manual di:
+# Pages project > Settings > Functions > R2 bucket bindings
+[[r2_buckets]]
+binding = "IMAGE_BUCKET"
+bucket_name = "kirim-gambar-images"
