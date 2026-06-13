@@ -765,43 +765,101 @@ window._admin = (() => {
     return data;
   }
 
+  // Jalankan satu action ke banyak key, tampilkan progress
+  async function callMany(action, keys, extraPayload = {}) {
+    if (!keys || !keys.length) { console.warn('[Admin] Array key kosong.'); return; }
+    console.log(`%c[Admin] Memproses ${keys.length} gambar…`, 'color:#E8752C;font-weight:bold');
+    const results = [];
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      const res = await fetch('/api/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ secret: _secret, action, payload: { key, ...extraPayload } }),
+      });
+      const data = await res.json();
+      const status = res.ok ? '✅' : '❌';
+      console.log(`  ${status} [${i+1}/${keys.length}] ${key}`, res.ok ? '' : data.error || '');
+      results.push({ key, ok: res.ok, data });
+    }
+    console.log(`%c[Admin] Selesai. ${results.filter(r=>r.ok).length}/${keys.length} berhasil.`, 'color:#3F5D54;font-weight:bold');
+    loadGallery();
+    return results;
+  }
+
   return {
-    auth(secret)              { _secret = secret; console.log('%c[Admin] Secret tersimpan untuk sesi ini.', 'color:#3F5D54;font-weight:bold'); },
-    listAll()                 { return call('list-all'); },
+    auth(secret) { _secret = secret; console.log('%c[Admin] Secret tersimpan untuk sesi ini.', 'color:#3F5D54;font-weight:bold'); },
+
+    listAll() { return call('list-all'); },
+
     async keys() {
       const data = await call('list-all');
       if (!data || !data.images) return;
       console.log(`%c[Admin] Total: ${data.total} gambar\n`, 'color:#3F5D54;font-weight:bold');
       console.table(data.images.map((img, i) => ({
-        '#':       i + 1,
+        '#':        i + 1,
         'Key/UUID': img.key,
-        'Nama':    img.name || '—',
-        'NSFW':    img.nsfw ? '⚠️ ya' : 'tidak',
-        'Upload':  img.uploaded ? new Date(img.uploaded).toLocaleString('id-ID') : '—',
+        'Nama':     img.name || '—',
+        'NSFW':     img.nsfw ? '⚠️ ya' : 'tidak',
+        'Upload':   img.uploaded ? new Date(img.uploaded).toLocaleString('id-ID') : '—',
       })));
       return data.images;
     },
-    setNsfw(key, nsfw)        { return call('set-nsfw', { key, nsfw }); },
-    setName(key, name)        { return call('set-name', { key, name }); },
-    deleteImage(key)          { return call('delete', { key }); },
-    deleteComment(key, id)    { return call('delete-comment', { key, commentId: id }); },
-    clearComments(key)        { return call('clear-comments', { key }); },
-    resetLikes(key)           { return call('reset-likes', { key }); },
+
+    // ── SINGLE ────────────────────────────────────────────
+    setNsfw(key, nsfw)     { return call('set-nsfw', { key, nsfw }); },
+    setName(key, name)     { return call('set-name', { key, name }); },
+    deleteImage(key)       { return call('delete', { key }); },
+    deleteComment(key, id) { return call('delete-comment', { key, commentId: id }); },
+    clearComments(key)     { return call('clear-comments', { key }); },
+    resetLikes(key)        { return call('reset-likes', { key }); },
+
+    // ── MULTIPLE (terima array key) ────────────────────────
+    // Contoh: _admin.setNsfwMany(["a.jpg","b.jpg"], true)
+    setNsfwMany(keys, nsfw)  { return callMany('set-nsfw', keys, { nsfw }); },
+    deleteMany(keys)          { return callMany('delete', keys); },
+    clearCommentsMany(keys)   { return callMany('clear-comments', keys); },
+    resetLikesMany(keys)      { return callMany('reset-likes', keys); },
+
+    // ── SHORTCUT: semua NSFW sekaligus ────────────────────
+    // _admin.setNsfwAll(true)  → tandai SEMUA gambar sebagai NSFW
+    // _admin.setNsfwAll(false) → lepas NSFW dari semua gambar
+    async setNsfwAll(nsfw) {
+      const data = await call('list-all');
+      if (!data || !data.images) return;
+      const keys = data.images.map(i => i.key);
+      return callMany('set-nsfw', keys, { nsfw });
+    },
+
     help() {
       console.log(`%c
-╔══════════════════════════════════════════════╗
-║            KIRIM GAMBAR — ADMIN              ║
-╠══════════════════════════════════════════════╣
-║  _admin.auth('secret')      set secret       ║
-║  _admin.keys()              tabel UUID+info  ║
-║  _admin.listAll()           raw JSON semua   ║
-║  _admin.setNsfw(key, bool)  tandai NSFW      ║
-║  _admin.setName(key, name)  ganti nama       ║
-║  _admin.deleteImage(key)    hapus gambar     ║
-║  _admin.deleteComment(k,id) hapus komentar   ║
-║  _admin.clearComments(key)  bersihkan komen  ║
-║  _admin.resetLikes(key)     reset likes      ║
-╚══════════════════════════════════════════════╝
+╔════════════════════════════════════════════════════════╗
+║               KIRIM GAMBAR — ADMIN                     ║
+╠════════════════════════════════════════════════════════╣
+║  SETUP                                                 ║
+║    _admin.auth('secret')         set secret            ║
+║                                                        ║
+║  INFO                                                  ║
+║    _admin.keys()                 tabel UUID+info       ║
+║    _admin.listAll()              raw JSON semua        ║
+║                                                        ║
+║  SINGLE (satu gambar)                                  ║
+║    _admin.setNsfw("key", true)   tandai NSFW           ║
+║    _admin.setName("key", "nama") ganti nama            ║
+║    _admin.deleteImage("key")     hapus gambar          ║
+║    _admin.clearComments("key")   bersihkan komentar    ║
+║    _admin.resetLikes("key")      reset likes           ║
+║                                                        ║
+║  MULTIPLE (array of keys)                              ║
+║    _admin.setNsfwMany([...], true)  tandai banyak NSFW ║
+║    _admin.deleteMany([...])         hapus banyak       ║
+║    _admin.clearCommentsMany([...])  bersihkan komentar ║
+║    _admin.resetLikesMany([...])     reset likes        ║
+║                                                        ║
+║  SEMUA SEKALIGUS                                       ║
+║    _admin.setNsfwAll(true)       semua jadi NSFW       ║
+║    _admin.setNsfwAll(false)      lepas semua NSFW      ║
+╚════════════════════════════════════════════════════════╝
       `, 'color:#E8752C;font-family:monospace;font-size:13px');
     }
   };
