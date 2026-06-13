@@ -206,6 +206,7 @@
     background:linear-gradient(90deg, #E8E0D0 25%, #F0E8D8 50%, #E8E0D0 75%);
     background-size:200% 100%; animation:skeleton 1.4s infinite;
     margin-bottom:16px; position:relative; display:flex; align-items:center; justify-content:center;
+    cursor:default;
   }
   .modal-img-wrap.loaded{ background:var(--bg); animation:none; }
   .modal-img-wrap.error{ background:#EDE8E0; animation:none; }
@@ -213,6 +214,7 @@
   .modal-img{
     width:100%; max-height:320px; object-fit:contain;
     display:block; opacity:0; transition:opacity .3s;
+    pointer-events:none; user-select:none; -webkit-user-select:none;
   }
   .modal-img.ready{ opacity:1; }
   .modal-img.nsfw-blur{ filter:blur(20px); transition:filter .3s; }
@@ -887,8 +889,7 @@ async function openModal(img){
 
   // Load image with skeleton + error handling
   modalImg.onload  = () => { imgWrap.classList.add('loaded'); modalImg.classList.add('ready'); };
-  modalImg.onerror = () => {
-    imgWrap.classList.add('error');
+  modalImg.onerror = () => {    imgWrap.classList.add('error');
     imgWrap.classList.remove('loaded');
     modalImg.style.display = 'none';
     document.getElementById('modalDownloadBtn').style.display = 'none';
