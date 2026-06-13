@@ -23,11 +23,8 @@
     --radius: 14px;
     --shadow: 0 8px 24px rgba(42,39,34,0.06);
   }
-
   *{ box-sizing: border-box; }
-
-  html, body{ margin:0; padding:0; }
-
+  html,body{ margin:0; padding:0; }
   body{
     background: var(--bg);
     color: var(--ink);
@@ -35,416 +32,161 @@
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
   }
+  .wrap{ max-width:880px; margin:0 auto; padding:48px 24px 80px; }
 
-  .wrap{
-    max-width: 880px;
-    margin: 0 auto;
-    padding: 48px 24px 80px;
-  }
+  /* Header */
+  header{ display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin-bottom:40px; flex-wrap:wrap; }
+  .brand{ display:flex; align-items:center; gap:12px; }
+  .brand-mark{ width:38px; height:38px; border-radius:9px; background:var(--negative); position:relative; flex-shrink:0; }
+  .brand-mark::before,.brand-mark::after{ content:''; position:absolute; width:9px; height:9px; border-radius:2px; background:var(--accent); }
+  .brand-mark::before{ top:7px; left:7px; }
+  .brand-mark::after{ bottom:7px; right:7px; background:var(--paper-text); opacity:.5; }
+  .brand h1{ font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700; margin:0; letter-spacing:-0.01em; }
+  .brand p{ margin:2px 0 0; font-size:13px; color:var(--ink-soft); font-family:'Space Mono',monospace; }
+  .tagline{ max-width:280px; font-size:14px; color:var(--ink-soft); text-align:right; }
+  @media(max-width:600px){ .tagline{ display:none; } }
 
-  /* ---------- Header ---------- */
-  header{
-    display:flex;
-    align-items:flex-end;
-    justify-content: space-between;
-    gap: 16px;
-    margin-bottom: 40px;
-    flex-wrap: wrap;
-  }
+  /* Tabs */
+  .tabs{ display:flex; gap:8px; margin-bottom:16px; }
+  .tab-btn{ font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px; padding:10px 18px; border-radius:999px; border:1px solid var(--border); background:var(--surface); color:var(--ink-soft); cursor:pointer; transition:all .15s ease; }
+  .tab-btn.active{ background:var(--negative); color:var(--paper-text); border-color:var(--negative); }
+  .tab-btn:not(.active):hover{ border-color:var(--accent); color:var(--ink); }
 
-  .brand{
-    display:flex;
-    align-items:center;
-    gap: 12px;
-  }
+  /* Panel */
+  .panel{ background:var(--negative); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; position:relative; }
+  .sprockets{ display:flex; justify-content:space-around; padding:10px 18px; }
+  .sprockets span{ width:12px; height:8px; border-radius:2px; background:var(--negative-edge); }
+  .panel-body{ padding:8px 28px 32px; }
 
-  .brand-mark{
-    width: 38px;
-    height: 38px;
-    border-radius: 9px;
-    background: var(--negative);
-    position: relative;
-    flex-shrink:0;
-  }
-  .brand-mark::before, .brand-mark::after{
-    content:'';
-    position:absolute;
-    width: 9px;
-    height: 9px;
-    border-radius: 2px;
-    background: var(--accent);
-  }
-  .brand-mark::before{ top: 7px; left: 7px; }
-  .brand-mark::after{ bottom: 7px; right: 7px; background: var(--paper-text); opacity:.5; }
-
-  .brand h1{
-    font-family:'Space Grotesk', sans-serif;
-    font-size: 22px;
-    font-weight: 700;
-    margin: 0;
-    letter-spacing: -0.01em;
-  }
-  .brand p{
-    margin: 2px 0 0;
-    font-size: 13px;
-    color: var(--ink-soft);
-    font-family:'Space Mono', monospace;
-  }
-
-  .tagline{
-    max-width: 280px;
-    font-size: 14px;
-    color: var(--ink-soft);
-    text-align: right;
-  }
-  @media (max-width: 600px){
-    .tagline{ display:none; }
-  }
-
-  /* ---------- Tabs ---------- */
-  .tabs{
-    display:flex;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-  .tab-btn{
-    font-family:'Space Grotesk', sans-serif;
-    font-weight: 600;
-    font-size: 14px;
-    padding: 10px 18px;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--ink-soft);
-    cursor: pointer;
-    transition: all .15s ease;
-  }
-  .tab-btn.active{
-    background: var(--negative);
-    color: var(--paper-text);
-    border-color: var(--negative);
-  }
-  .tab-btn:not(.active):hover{
-    border-color: var(--accent);
-    color: var(--ink);
-  }
-
-  /* ---------- Panel (the "negative" / light-table) ---------- */
-  .panel{
-    background: var(--negative);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    overflow: hidden;
-    position: relative;
-  }
-
-  .sprockets{
-    display:flex;
-    justify-content: space-around;
-    padding: 10px 18px;
-  }
-  .sprockets span{
-    width: 12px;
-    height: 8px;
-    border-radius: 2px;
-    background: var(--negative-edge);
-  }
-
-  .panel-body{
-    padding: 8px 28px 32px;
-  }
+  /* Name input */
+  .name-input-wrap{ margin-bottom:14px; }
+  .name-input-wrap label{ display:block; font-family:'Space Mono',monospace; font-size:12px; color:#A89E8F; text-transform:uppercase; letter-spacing:.06em; margin-bottom:8px; }
+  .name-input-wrap input{ width:100%; background:var(--negative-edge); border:1px solid #4A453C; border-radius:8px; color:var(--paper-text); padding:13px 14px; font-size:14px; font-family:'Inter',sans-serif; outline:none; transition:border-color .15s ease; }
+  .name-input-wrap input::placeholder{ color:#786F62; }
+  .name-input-wrap input:focus{ border-color:var(--accent); }
 
   /* Dropzone */
-  .dropzone{
-    border: 1.5px dashed #4A453C;
-    border-radius: 10px;
-    padding: 48px 24px;
-    text-align: center;
-    cursor: pointer;
-    transition: border-color .2s ease, background .2s ease;
-  }
-  .dropzone.drag{
-    border-color: var(--accent);
-    background: rgba(232,117,44,0.08);
-  }
-  .dropzone-icon{
-    width: 46px;
-    height: 46px;
-    margin: 0 auto 16px;
-    border: 1.5px solid #5C5648;
-    border-radius: 8px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-  }
-  .dropzone-icon svg{ width: 22px; height: 22px; stroke: var(--accent); }
-  .dropzone h3{
-    font-family:'Space Grotesk', sans-serif;
-    color: var(--paper-text);
-    font-size: 17px;
-    margin: 0 0 6px;
-    font-weight: 600;
-  }
-  .dropzone p{
-    color: #A89E8F;
-    font-size: 13px;
-    margin: 0;
-  }
-  .dropzone p span{
-    color: var(--accent);
-    text-decoration: underline;
-  }
+  .dropzone{ border:1.5px dashed #4A453C; border-radius:10px; padding:48px 24px; text-align:center; cursor:pointer; transition:border-color .2s ease, background .2s ease; }
+  .dropzone.drag{ border-color:var(--accent); background:rgba(232,117,44,0.08); }
+  .dropzone-icon{ width:46px; height:46px; margin:0 auto 16px; border:1.5px solid #5C5648; border-radius:8px; display:flex; align-items:center; justify-content:center; }
+  .dropzone-icon svg{ width:22px; height:22px; stroke:var(--accent); }
+  .dropzone h3{ font-family:'Space Grotesk',sans-serif; color:var(--paper-text); font-size:17px; margin:0 0 6px; font-weight:600; }
+  .dropzone p{ color:#A89E8F; font-size:13px; margin:0; }
+  .dropzone p span{ color:var(--accent); text-decoration:underline; }
 
   /* Link form */
-  .link-form{
-    display:flex;
-    flex-direction: column;
-    gap: 14px;
-    padding: 36px 4px 4px;
-  }
-  .link-form label{
-    font-family:'Space Mono', monospace;
-    font-size: 12px;
-    color: #A89E8F;
-    text-transform: uppercase;
-    letter-spacing: .06em;
-  }
-  .link-row{
-    display:flex;
-    gap: 10px;
-  }
-  .link-row input{
-    flex:1;
-    background: var(--negative-edge);
-    border: 1px solid #4A453C;
-    border-radius: 8px;
-    color: var(--paper-text);
-    padding: 13px 14px;
-    font-size: 14px;
-    font-family: 'Inter', sans-serif;
-    outline: none;
-    transition: border-color .15s ease;
-  }
-  .link-row input::placeholder{ color: #786F62; }
-  .link-row input:focus{ border-color: var(--accent); }
+  .link-form{ display:flex; flex-direction:column; gap:14px; padding:4px 4px 4px; }
+  .link-form label{ font-family:'Space Mono',monospace; font-size:12px; color:#A89E8F; text-transform:uppercase; letter-spacing:.06em; }
+  .link-row{ display:flex; gap:10px; }
+  .link-row input{ flex:1; background:var(--negative-edge); border:1px solid #4A453C; border-radius:8px; color:var(--paper-text); padding:13px 14px; font-size:14px; font-family:'Inter',sans-serif; outline:none; transition:border-color .15s ease; }
+  .link-row input::placeholder{ color:#786F62; }
+  .link-row input:focus{ border-color:var(--accent); }
 
-  .btn{
-    font-family:'Space Grotesk', sans-serif;
-    font-weight: 600;
-    font-size: 14px;
-    padding: 13px 22px;
-    border-radius: 8px;
-    border: none;
-    background: var(--accent);
-    color: #1A130A;
-    cursor: pointer;
-    transition: filter .15s ease, transform .1s ease;
-    white-space: nowrap;
-  }
-  .btn:hover{ filter: brightness(1.08); }
-  .btn:active{ transform: scale(.98); }
-  .btn:disabled{ opacity: .5; cursor: default; }
+  .btn{ font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px; padding:13px 22px; border-radius:8px; border:none; background:var(--accent); color:#1A130A; cursor:pointer; transition:filter .15s ease, transform .1s ease; white-space:nowrap; }
+  .btn:hover{ filter:brightness(1.08); }
+  .btn:active{ transform:scale(.98); }
+  .btn:disabled{ opacity:.5; cursor:default; }
 
-  .hint{
-    font-size: 12px;
-    color: #786F62;
-  }
+  .hint{ font-size:12px; color:#786F62; }
 
   /* Progress */
-  .progress-wrap{
-    display:none;
-    margin-top: 20px;
-  }
+  .progress-wrap{ display:none; margin-top:20px; }
   .progress-wrap.show{ display:block; }
-  .progress-bar{
-    height: 6px;
-    border-radius: 999px;
-    background: var(--negative-edge);
-    overflow: hidden;
-  }
-  .progress-fill{
-    height: 100%;
-    width: 0%;
-    background: var(--accent);
-    transition: width .15s ease;
-  }
-  .progress-label{
-    font-family:'Space Mono', monospace;
-    font-size: 12px;
-    color: #A89E8F;
-    margin-top: 8px;
-  }
+  .progress-bar{ height:6px; border-radius:999px; background:var(--negative-edge); overflow:hidden; }
+  .progress-fill{ height:100%; width:0%; background:var(--accent); transition:width .15s ease; }
+  .progress-label{ font-family:'Space Mono',monospace; font-size:12px; color:#A89E8F; margin-top:8px; }
 
   /* Result */
-  .result{
-    display:none;
-    margin-top: 22px;
-    background: var(--negative-edge);
-    border: 1px solid #4A453C;
-    border-radius: 10px;
-    padding: 16px;
-    gap: 16px;
-    align-items: center;
-  }
+  .result{ display:none; margin-top:22px; background:var(--negative-edge); border:1px solid #4A453C; border-radius:10px; padding:16px; gap:16px; align-items:center; }
   .result.show{ display:flex; }
-  .result img{
-    width: 64px;
-    height: 64px;
-    object-fit: cover;
-    border-radius: 6px;
-    flex-shrink: 0;
-  }
+  .result img{ width:64px; height:64px; object-fit:cover; border-radius:6px; flex-shrink:0; }
   .result-info{ flex:1; min-width:0; }
-  .result-info .label{
-    font-family:'Space Mono', monospace;
-    font-size: 11px;
-    color: #A89E8F;
-    text-transform: uppercase;
-    letter-spacing: .06em;
-    margin-bottom: 4px;
-  }
-  .result-link{
-    font-family:'Space Mono', monospace;
-    font-size: 13px;
-    color: var(--paper-text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .copy-btn{
-    background: transparent;
-    border: 1px solid #5C5648;
-    color: var(--paper-text);
-    font-family:'Space Grotesk', sans-serif;
-    font-weight: 600;
-    font-size: 13px;
-    padding: 9px 16px;
-    border-radius: 7px;
-    cursor: pointer;
-    flex-shrink:0;
-    transition: border-color .15s ease, background .15s ease;
-  }
-  .copy-btn:hover{ border-color: var(--accent); background: rgba(232,117,44,0.08); }
-  .copy-btn.copied{ border-color: var(--accent2); color: var(--accent2); }
+  .result-info .label{ font-family:'Space Mono',monospace; font-size:11px; color:#A89E8F; text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px; }
+  .result-link{ font-family:'Space Mono',monospace; font-size:13px; color:var(--paper-text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .copy-btn{ background:transparent; border:1px solid #5C5648; color:var(--paper-text); font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:13px; padding:9px 16px; border-radius:7px; cursor:pointer; flex-shrink:0; transition:border-color .15s ease, background .15s ease; }
+  .copy-btn:hover{ border-color:var(--accent); background:rgba(232,117,44,0.08); }
+  .copy-btn.copied{ border-color:var(--accent2); color:var(--accent2); }
 
-  .error-msg{
-    display:none;
-    margin-top: 16px;
-    color: #E8752C;
-    font-size: 13px;
-    font-family: 'Space Mono', monospace;
-    background: rgba(232,117,44,0.1);
-    border: 1px solid rgba(232,117,44,0.3);
-    border-radius: 8px;
-    padding: 12px 14px;
-  }
+  .error-msg{ display:none; margin-top:16px; color:#E8752C; font-size:13px; font-family:'Space Mono',monospace; background:rgba(232,117,44,0.1); border:1px solid rgba(232,117,44,0.3); border-radius:8px; padding:12px 14px; }
   .error-msg.show{ display:block; }
 
-  /* ---------- Gallery ---------- */
-  .gallery-section{
-    margin-top: 56px;
-  }
-  .gallery-head{
-    display:flex;
-    align-items:baseline;
-    justify-content: space-between;
-    margin-bottom: 18px;
-  }
-  .gallery-head h2{
-    font-family:'Space Grotesk', sans-serif;
-    font-size: 17px;
-    margin: 0;
-  }
-  .gallery-head span{
-    font-family:'Space Mono', monospace;
-    font-size: 12px;
-    color: var(--ink-soft);
-  }
+  /* Gallery */
+  .gallery-section{ margin-top:56px; }
+  .gallery-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:18px; }
+  .gallery-head h2{ font-family:'Space Grotesk',sans-serif; font-size:17px; margin:0; }
+  .gallery-head span{ font-family:'Space Mono',monospace; font-size:12px; color:var(--ink-soft); }
+  .gallery-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(160px,1fr)); gap:14px; }
 
-  .gallery-grid{
-    display:grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 14px;
-  }
+  .frame{ background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden; position:relative; cursor:pointer; transition:transform .15s ease, box-shadow .15s ease; }
+  .frame:hover{ transform:translateY(-3px); box-shadow:var(--shadow); }
+  .frame .frame-img{ width:100%; aspect-ratio:1/1; object-fit:cover; display:block; background:var(--accent-soft); }
+  .frame-num{ position:absolute; top:8px; left:8px; background:rgba(33,31,27,0.78); color:var(--paper-text); font-family:'Space Mono',monospace; font-size:11px; padding:2px 7px; border-radius:5px; letter-spacing:.04em; }
 
-  .frame{
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    overflow: hidden;
-    position: relative;
-    cursor: pointer;
-    transition: transform .15s ease, box-shadow .15s ease;
-  }
-  .frame:hover{
-    transform: translateY(-3px);
-    box-shadow: var(--shadow);
-  }
-  .frame .frame-img{
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    display: block;
-    background: var(--accent-soft);
-  }
-  .frame-num{
-    position:absolute;
-    top: 8px;
-    left: 8px;
-    background: rgba(33,31,27,0.78);
-    color: var(--paper-text);
-    font-family:'Space Mono', monospace;
-    font-size: 11px;
-    padding: 2px 7px;
-    border-radius: 5px;
-    letter-spacing: .04em;
-  }
+  /* Frame footer: name + like */
+  .frame-footer{ padding:8px 10px; display:flex; align-items:center; justify-content:space-between; gap:6px; border-top:1px solid var(--border); }
+  .frame-uploader{ font-size:12px; color:var(--ink-soft); font-family:'Inter',sans-serif; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; min-width:0; }
+  .like-btn{ display:flex; align-items:center; gap:4px; border:none; background:transparent; cursor:pointer; padding:3px 6px; border-radius:6px; transition:background .15s; flex-shrink:0; }
+  .like-btn:hover{ background:var(--accent-soft); }
+  .like-btn svg{ width:14px; height:14px; transition:fill .15s, stroke .15s; }
+  .like-btn .like-count{ font-family:'Space Mono',monospace; font-size:11px; color:var(--ink-soft); }
+  .like-btn.liked svg{ fill:var(--accent); stroke:var(--accent); }
+  .like-btn.liked .like-count{ color:var(--accent); }
 
-  .empty-gallery{
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 36px 12px;
-    color: var(--ink-soft);
-    font-size: 13px;
-    border: 1px dashed var(--border);
-    border-radius: 10px;
-  }
+  .empty-gallery{ grid-column:1/-1; text-align:center; padding:36px 12px; color:var(--ink-soft); font-size:13px; border:1px dashed var(--border); border-radius:10px; }
 
-  /* ---------- Toast ---------- */
-  .toast{
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    background: var(--negative);
-    color: var(--paper-text);
-    font-family:'Space Grotesk', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    padding: 12px 20px;
-    border-radius: 999px;
-    box-shadow: var(--shadow);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .2s ease, transform .2s ease;
-    z-index: 50;
-  }
-  .toast.show{
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
+  /* Toast */
+  .toast{ position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--negative); color:var(--paper-text); font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:600; padding:12px 20px; border-radius:999px; box-shadow:var(--shadow); opacity:0; pointer-events:none; transition:opacity .2s ease, transform .2s ease; z-index:100; }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
 
-  footer{
-    margin-top: 64px;
-    text-align: center;
-    font-size: 12px;
-    color: var(--ink-soft);
-    font-family: 'Space Mono', monospace;
-  }
-
-  /* tab panels */
+  footer{ margin-top:64px; text-align:center; font-size:12px; color:var(--ink-soft); font-family:'Space Mono',monospace; }
   [data-panel]{ display:none; }
   [data-panel].active{ display:block; }
+
+  /* ===== MODAL ===== */
+  .modal-overlay{ position:fixed; inset:0; background:rgba(33,31,27,0.85); z-index:200; display:none; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(4px); }
+  .modal-overlay.open{ display:flex; }
+  .modal{ background:var(--surface); border-radius:var(--radius); width:100%; max-width:680px; max-height:90vh; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(0,0,0,0.3); }
+  .modal-header{ display:flex; align-items:center; justify-content:space-between; padding:18px 20px; border-bottom:1px solid var(--border); flex-shrink:0; }
+  .modal-header h3{ font-family:'Space Grotesk',sans-serif; font-size:15px; margin:0; font-weight:600; }
+  .modal-close{ background:transparent; border:1px solid var(--border); color:var(--ink-soft); width:32px; height:32px; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:border-color .15s; font-size:18px; line-height:1; }
+  .modal-close:hover{ border-color:var(--accent); color:var(--ink); }
+  .modal-body{ overflow-y:auto; padding:20px; flex:1; }
+  .modal-img{ width:100%; max-height:300px; object-fit:contain; border-radius:8px; background:var(--bg); margin-bottom:16px; }
+  .modal-meta{ display:flex; align-items:center; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
+  .modal-uploader{ font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px; color:var(--ink); }
+  .modal-date{ font-family:'Space Mono',monospace; font-size:11px; color:var(--ink-soft); }
+  .modal-like-btn{ margin-left:auto; display:flex; align-items:center; gap:6px; border:1px solid var(--border); background:transparent; cursor:pointer; padding:7px 14px; border-radius:8px; transition:all .15s; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:13px; color:var(--ink-soft); }
+  .modal-like-btn:hover{ border-color:var(--accent); background:var(--accent-soft); color:var(--ink); }
+  .modal-like-btn svg{ width:16px; height:16px; transition:fill .15s, stroke .15s; }
+  .modal-like-btn.liked{ border-color:var(--accent); color:var(--accent); }
+  .modal-like-btn.liked svg{ fill:var(--accent); stroke:var(--accent); }
+  .modal-copy-row{ display:flex; gap:8px; margin-bottom:24px; }
+  .modal-url{ flex:1; font-family:'Space Mono',monospace; font-size:12px; background:var(--bg); border:1px solid var(--border); border-radius:7px; padding:10px 12px; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .modal-copy{ font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:13px; padding:10px 16px; border-radius:7px; border:none; background:var(--accent); color:#1A130A; cursor:pointer; flex-shrink:0; transition:filter .15s; }
+  .modal-copy:hover{ filter:brightness(1.08); }
+  .modal-copy.copied{ background:var(--accent2); color:#fff; }
+
+  /* Comments */
+  .comments-title{ font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px; margin:0 0 14px; }
+  .comment-list{ display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
+  .comment-item{ background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:12px 14px; }
+  .comment-author{ font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:13px; color:var(--ink); margin-bottom:4px; }
+  .comment-date{ font-family:'Space Mono',monospace; font-size:10px; color:var(--ink-soft); margin-bottom:6px; }
+  .comment-text{ font-size:13px; color:var(--ink); line-height:1.5; }
+  .no-comments{ font-size:13px; color:var(--ink-soft); margin-bottom:20px; }
+
+  /* Comment form */
+  .comment-form{ display:flex; flex-direction:column; gap:10px; border-top:1px solid var(--border); padding-top:16px; }
+  .comment-form label{ font-family:'Space Mono',monospace; font-size:11px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.06em; }
+  .comment-form input, .comment-form textarea{ width:100%; border:1px solid var(--border); border-radius:7px; background:var(--bg); color:var(--ink); padding:10px 12px; font-size:13px; font-family:'Inter',sans-serif; outline:none; transition:border-color .15s; resize:vertical; }
+  .comment-form input:focus, .comment-form textarea:focus{ border-color:var(--accent); }
+  .comment-form textarea{ min-height:80px; }
+  .comment-word-count{ font-family:'Space Mono',monospace; font-size:11px; color:var(--ink-soft); text-align:right; }
+  .comment-word-count.over{ color:#E8752C; }
+  .comment-submit{ font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:13px; padding:10px 18px; border-radius:7px; border:none; background:var(--accent); color:#1A130A; cursor:pointer; transition:filter .15s; align-self:flex-start; }
+  .comment-submit:hover{ filter:brightness(1.08); }
+  .comment-submit:disabled{ opacity:.5; cursor:default; }
+  .comment-error{ font-size:12px; color:var(--accent); font-family:'Space Mono',monospace; }
 </style>
 </head>
 <body>
@@ -474,12 +216,15 @@
     <div class="panel-body">
 
       <div data-panel="file" class="active">
+        <!-- Nama wajib diisi -->
+        <div class="name-input-wrap">
+          <label for="uploaderName">Nama kamu</label>
+          <input type="text" id="uploaderName" placeholder="Masukkan namamu dulu…" maxlength="60" autocomplete="off" />
+        </div>
         <div class="dropzone" id="dropzone">
           <div class="dropzone-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 16V4"/>
-              <path d="M5 11l7-7 7 7"/>
-              <path d="M4 20h16"/>
+              <path d="M12 16V4"/><path d="M5 11l7-7 7 7"/><path d="M4 20h16"/>
             </svg>
           </div>
           <h3>Lepas gambar di sini</h3>
@@ -490,6 +235,12 @@
 
       <div data-panel="link">
         <div class="link-form">
+          <div>
+            <label for="linkUploaderName">Nama kamu</label>
+            <div style="margin-top:8px">
+              <input type="text" id="linkUploaderName" style="width:100%;background:var(--negative-edge);border:1px solid #4A453C;border-radius:8px;color:var(--paper-text);padding:13px 14px;font-size:14px;font-family:Inter,sans-serif;outline:none;transition:border-color .15s ease" placeholder="Masukkan namamu dulu…" maxlength="60" autocomplete="off" />
+            </div>
+          </div>
           <div>
             <label for="urlInput">URL gambar</label>
             <div class="link-row" style="margin-top:8px">
@@ -530,237 +281,403 @@
     </div>
   </div>
 
-  <footer>dibuat dengan Cloudflare Pages + R2</footer>
+  <footer>dibuat dengan Cloudflare Pages + Workers KV</footer>
 </div>
 
 <div class="toast" id="toast"></div>
 
+<!-- ===== MODAL ===== -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle">Detail Gambar</h3>
+      <button class="modal-close" id="modalClose">&times;</button>
+    </div>
+    <div class="modal-body">
+      <img class="modal-img" id="modalImg" alt="" />
+      <div class="modal-meta">
+        <div>
+          <div class="modal-uploader" id="modalUploader"></div>
+          <div class="modal-date" id="modalDate"></div>
+        </div>
+        <button class="modal-like-btn" id="modalLikeBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+          <span id="modalLikeCount">0</span>
+        </button>
+      </div>
+      <div class="modal-copy-row">
+        <div class="modal-url" id="modalUrl"></div>
+        <button class="modal-copy" id="modalCopyBtn">Salin</button>
+      </div>
+
+      <!-- Komentar -->
+      <p class="comments-title">Komentar</p>
+      <div class="comment-list" id="commentList"></div>
+
+      <div class="comment-form">
+        <div>
+          <label for="commentName">Nama kamu</label>
+          <input type="text" id="commentName" placeholder="Nama kamu…" maxlength="60" autocomplete="off" style="margin-top:6px" />
+        </div>
+        <div>
+          <label for="commentText">Komentar <small style="text-transform:none;letter-spacing:0;color:var(--ink-soft)">(maks 100 kata)</small></label>
+          <textarea id="commentText" placeholder="Tulis komentar di sini…" style="margin-top:6px"></textarea>
+          <div class="comment-word-count" id="commentWordCount">0 / 100 kata</div>
+        </div>
+        <div class="comment-error" id="commentError"></div>
+        <button class="comment-submit" id="commentSubmit">Kirim komentar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-  // ---------- Tabs ----------
-  const tabBtns = document.querySelectorAll('.tab-btn');
-  const panels = document.querySelectorAll('[data-panel]');
-  tabBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      tabBtns.forEach(b => b.classList.remove('active'));
-      panels.forEach(p => p.classList.remove('active'));
-      btn.classList.add('active');
-      document.querySelector(`[data-panel="${btn.dataset.tab}"]`).classList.add('active');
-      hideError();
-    });
-  });
+// ===================== UTILS =====================
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+function showError(msg){ const e=document.getElementById('errorMsg'); e.textContent=msg; e.classList.add('show'); }
+function hideError(){ document.getElementById('errorMsg').classList.remove('show'); }
+function resetProgress(){ const w=document.getElementById('progressWrap'); w.classList.remove('show'); document.getElementById('progressFill').style.width='0%'; }
+function countWords(text){ return text.trim().split(/\s+/).filter(Boolean).length; }
+function fmtDate(iso){ if(!iso) return ''; const d=new Date(iso); return d.toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'})+' '+d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}); }
 
-  // ---------- Elements ----------
-  const dropzone = document.getElementById('dropzone');
-  const fileInput = document.getElementById('fileInput');
-  const urlInput = document.getElementById('urlInput');
-  const urlSubmit = document.getElementById('urlSubmit');
-  const progressWrap = document.getElementById('progressWrap');
-  const progressFill = document.getElementById('progressFill');
-  const progressLabel = document.getElementById('progressLabel');
-  const result = document.getElementById('result');
-  const resultImg = document.getElementById('resultImg');
-  const resultLink = document.getElementById('resultLink');
-  const copyBtn = document.getElementById('copyBtn');
-  const errorMsg = document.getElementById('errorMsg');
-  const toast = document.getElementById('toast');
-  const galleryGrid = document.getElementById('galleryGrid');
-  const galleryCount = document.getElementById('galleryCount');
-
-  const MAX_SIZE = 10 * 1024 * 1024;
-
-  function showToast(msg){
-    toast.textContent = msg;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2200);
-  }
-
-  function showError(msg){
-    errorMsg.textContent = msg;
-    errorMsg.classList.add('show');
-  }
-  function hideError(){
-    errorMsg.classList.remove('show');
-  }
-
-  function resetProgress(){
-    progressWrap.classList.remove('show');
-    progressFill.style.width = '0%';
-  }
-
-  function showResult(url, previewSrc){
-    result.classList.add('show');
-    resultImg.src = previewSrc;
-    resultLink.textContent = url;
-    resultLink.dataset.url = url;
-  }
-
-  // ---------- Dropzone interactions ----------
-  dropzone.addEventListener('click', () => fileInput.click());
-
-  ['dragenter','dragover'].forEach(evt =>
-    dropzone.addEventListener(evt, e => {
-      e.preventDefault();
-      dropzone.classList.add('drag');
-    })
-  );
-  ['dragleave','drop'].forEach(evt =>
-    dropzone.addEventListener(evt, e => {
-      e.preventDefault();
-      dropzone.classList.remove('drag');
-    })
-  );
-  dropzone.addEventListener('drop', e => {
-    const file = e.dataTransfer.files[0];
-    if (file) handleFile(file);
-  });
-  fileInput.addEventListener('change', e => {
-    const file = e.target.files[0];
-    if (file) handleFile(file);
-  });
-
-  // ---------- Upload from device ----------
-  function handleFile(file){
+// ===================== TABS =====================
+const tabBtns = document.querySelectorAll('.tab-btn');
+const tabPanels = document.querySelectorAll('[data-panel]');
+tabBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    tabBtns.forEach(b=>b.classList.remove('active'));
+    tabPanels.forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelector(`[data-panel="${btn.dataset.tab}"]`).classList.add('active');
     hideError();
-    result.classList.remove('show');
+  });
+});
 
-    if (!file.type.startsWith('image/')){
-      showError('Berkas harus berupa gambar (JPG, PNG, GIF, WEBP, dll).');
-      return;
+// ===================== UPLOAD FROM FILE =====================
+const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('fileInput');
+dropzone.addEventListener('click', () => fileInput.click());
+['dragenter','dragover'].forEach(e => dropzone.addEventListener(e, ev => { ev.preventDefault(); dropzone.classList.add('drag'); }));
+['dragleave','drop'].forEach(e => dropzone.addEventListener(e, ev => { ev.preventDefault(); dropzone.classList.remove('drag'); }));
+dropzone.addEventListener('drop', e => { const f=e.dataTransfer.files[0]; if(f) handleFile(f); });
+fileInput.addEventListener('change', e => { const f=e.target.files[0]; if(f) handleFile(f); });
+
+function showResult(url, previewSrc){
+  const r=document.getElementById('result'); r.classList.add('show');
+  document.getElementById('resultImg').src=previewSrc;
+  const rl=document.getElementById('resultLink'); rl.textContent=url; rl.dataset.url=url;
+}
+
+function handleFile(file){
+  hideError();
+  document.getElementById('result').classList.remove('show');
+
+  const name = document.getElementById('uploaderName').value.trim();
+  if(!name){ showError('Isi namamu dulu sebelum mengunggah.'); return; }
+  if(!file.type.startsWith('image/')){ showError('Berkas harus berupa gambar (JPG, PNG, GIF, WEBP, dll).'); return; }
+  if(file.size > 10*1024*1024){ showError('Ukuran gambar maksimal 10MB.'); return; }
+
+  const localPreview = URL.createObjectURL(file);
+  const pw=document.getElementById('progressWrap'); pw.classList.add('show');
+  const pf=document.getElementById('progressFill'); pf.style.width='0%';
+  const pl=document.getElementById('progressLabel'); pl.textContent='Mengunggah\u2026 0%';
+
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('name', name);
+
+  const xhr = new XMLHttpRequest();
+  xhr.open('POST', '/api/upload');
+  xhr.upload.onprogress = e => {
+    if(e.lengthComputable){
+      const pct=Math.round((e.loaded/e.total)*100);
+      pf.style.width=pct+'%';
+      pl.textContent=`Mengunggah\u2026 ${pct}%`;
     }
-    if (file.size > MAX_SIZE){
-      showError('Ukuran gambar maksimal 10MB.');
-      return;
-    }
-
-    const localPreview = URL.createObjectURL(file);
-
-    progressWrap.classList.add('show');
-    progressFill.style.width = '0%';
-    progressLabel.textContent = 'Mengunggah\u2026 0%';
-
-    const formData = new FormData();
-    formData.append('file', file);
-
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', '/api/upload');
-
-    xhr.upload.onprogress = e => {
-      if (e.lengthComputable){
-        const pct = Math.round((e.loaded / e.total) * 100);
-        progressFill.style.width = pct + '%';
-        progressLabel.textContent = `Mengunggah\u2026 ${pct}%`;
-      }
-    };
-
-    xhr.onload = () => {
-      resetProgress();
-      try{
-        const data = JSON.parse(xhr.responseText);
-        if (xhr.status >= 200 && xhr.status < 300 && data.success){
-          showResult(data.url, localPreview);
-          loadGallery();
-        } else {
-          showError(data.error || 'Gagal mengunggah gambar.');
-        }
-      } catch {
-        showError('Terjadi kesalahan saat memproses respons server.');
-      }
-    };
-    xhr.onerror = () => {
-      resetProgress();
-      showError('Koneksi gagal. Coba lagi.');
-    };
-    xhr.send(formData);
-  }
-
-  // ---------- Upload from URL ----------
-  urlSubmit.addEventListener('click', async () => {
-    const url = urlInput.value.trim();
-    hideError();
-    result.classList.remove('show');
-
-    if (!url){
-      showError('Masukkan link gambar terlebih dahulu.');
-      return;
-    }
-    try { new URL(url); } catch {
-      showError('Link tidak valid.');
-      return;
-    }
-
-    urlSubmit.disabled = true;
-    progressWrap.classList.add('show');
-    progressFill.style.width = '60%';
-    progressLabel.textContent = 'Mengambil gambar dari link\u2026';
-
+  };
+  xhr.onload = () => {
+    resetProgress();
     try{
-      const res = await fetch('/api/link', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url })
-      });
-      const data = await res.json();
-      resetProgress();
-      if (res.ok && data.success){
-        showResult(data.url, url);
-        urlInput.value = '';
+      const data=JSON.parse(xhr.responseText);
+      if(xhr.status>=200 && xhr.status<300 && data.success){
+        showResult(data.url, localPreview);
         loadGallery();
-      } else {
-        showError(data.error || 'Gagal mengambil gambar dari link.');
-      }
-    } catch {
-      resetProgress();
-      showError('Koneksi gagal. Coba lagi.');
-    } finally {
-      urlSubmit.disabled = false;
+      } else { showError(data.error||'Gagal mengunggah gambar.'); }
+    } catch { showError('Terjadi kesalahan saat memproses respons server.'); }
+  };
+  xhr.onerror = () => { resetProgress(); showError('Koneksi gagal. Coba lagi.'); };
+  xhr.send(formData);
+}
+
+// ===================== UPLOAD FROM LINK =====================
+document.getElementById('urlSubmit').addEventListener('click', async () => {
+  const url=document.getElementById('urlInput').value.trim();
+  const name=document.getElementById('linkUploaderName').value.trim();
+  hideError();
+  document.getElementById('result').classList.remove('show');
+
+  if(!name){ showError('Isi namamu dulu sebelum menyimpan gambar.'); return; }
+  if(!url){ showError('Masukkan link gambar terlebih dahulu.'); return; }
+  try { new URL(url); } catch { showError('Link tidak valid.'); return; }
+
+  const btn=document.getElementById('urlSubmit'); btn.disabled=true;
+  const pw=document.getElementById('progressWrap'); pw.classList.add('show');
+  document.getElementById('progressFill').style.width='60%';
+  document.getElementById('progressLabel').textContent='Mengambil gambar dari link\u2026';
+
+  try{
+    const res = await fetch('/api/link', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ url, name })
+    });
+    const data = await res.json();
+    resetProgress();
+    if(res.ok && data.success){
+      showResult(data.url, url);
+      document.getElementById('urlInput').value='';
+      loadGallery();
+    } else { showError(data.error||'Gagal mengambil gambar dari link.'); }
+  } catch { resetProgress(); showError('Koneksi gagal. Coba lagi.'); }
+  finally { btn.disabled=false; }
+});
+
+// ===================== COPY RESULT LINK =====================
+document.getElementById('copyBtn').addEventListener('click', async () => {
+  const url=document.getElementById('resultLink').dataset.url;
+  try{
+    await navigator.clipboard.writeText(url);
+    const cb=document.getElementById('copyBtn');
+    cb.textContent='Tersalin!'; cb.classList.add('copied');
+    showToast('Link disalin ke clipboard');
+    setTimeout(()=>{ cb.textContent='Salin link'; cb.classList.remove('copied'); }, 1800);
+  } catch { showToast('Tidak bisa menyalin otomatis, salin manual ya'); }
+});
+
+// ===================== GALLERY =====================
+let galleryImages = [];
+
+function heartSvg(filled){
+  const fill = filled ? 'var(--accent)' : 'none';
+  const stroke = filled ? 'var(--accent)' : 'var(--ink-soft)';
+  return `<svg viewBox="0 0 24 24" fill="${fill}" stroke="${stroke}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
+}
+
+async function loadGallery(){
+  try{
+    const res = await fetch('/api/list');
+    const data = await res.json();
+    galleryImages = data.images || [];
+    const grid = document.getElementById('galleryGrid');
+    document.getElementById('galleryCount').textContent = galleryImages.length ? `${galleryImages.length} gambar` : '';
+
+    if(!galleryImages.length){
+      grid.innerHTML='<div class="empty-gallery">Belum ada gambar. Jadilah yang pertama mengunggah!</div>';
+      return;
     }
-  });
 
-  // ---------- Copy link ----------
-  copyBtn.addEventListener('click', async () => {
-    const url = resultLink.dataset.url;
-    try{
-      await navigator.clipboard.writeText(url);
-      copyBtn.textContent = 'Tersalin!';
-      copyBtn.classList.add('copied');
-      showToast('Link disalin ke clipboard');
-      setTimeout(() => {
-        copyBtn.textContent = 'Salin link';
-        copyBtn.classList.remove('copied');
-      }, 1800);
-    } catch {
-      showToast('Tidak bisa menyalin otomatis, salin manual ya');
-    }
-  });
+    grid.innerHTML = galleryImages.map((img, i) => `
+      <div class="frame" data-key="${img.key}" data-index="${i}">
+        <span class="frame-num">${String(galleryImages.length-i).padStart(2,'0')}</span>
+        <img class="frame-img" src="${img.url}" alt="Gambar ${i+1}" loading="lazy" />
+        <div class="frame-footer">
+          <span class="frame-uploader">${img.name ? escHtml(img.name) : '&mdash;'}</span>
+          <button class="like-btn" data-key="${img.key}" data-count="${img.likes||0}" title="Suka">
+            ${heartSvg(false)}
+            <span class="like-count">${img.likes||0}</span>
+          </button>
+        </div>
+      </div>
+    `).join('');
 
-  // ---------- Gallery ----------
-  async function loadGallery(){
-    try{
-      const res = await fetch('/api/list');
-      const data = await res.json();
-      const images = data.images || [];
+    // Click on image → open modal
+    grid.querySelectorAll('.frame').forEach(frame => {
+      frame.addEventListener('click', e => {
+        if(e.target.closest('.like-btn')) return;
+        const idx = parseInt(frame.dataset.index);
+        openModal(galleryImages[idx]);
+      });
+    });
 
-      galleryCount.textContent = images.length
-        ? `${images.length} gambar`
-        : '';
+    // Like buttons in gallery
+    grid.querySelectorAll('.like-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        toggleLike(btn.dataset.key, btn);
+      });
+    });
 
-      if (!images.length){
-        galleryGrid.innerHTML = '<div class="empty-gallery">Belum ada gambar. Jadilah yang pertama mengunggah!</div>';
-        return;
-      }
-
-      galleryGrid.innerHTML = images.map((img, i) => `
-        <a class="frame" href="${img.url}" target="_blank" rel="noopener">
-          <span class="frame-num">${String(images.length - i).padStart(2,'0')}</span>
-          <img class="frame-img" src="${img.url}" alt="Gambar unggahan ${i + 1}" loading="lazy" />
-        </a>
-      `).join('');
-    } catch {
-      galleryGrid.innerHTML = '<div class="empty-gallery">Galeri tidak dapat dimuat saat ini.</div>';
-    }
+  } catch {
+    document.getElementById('galleryGrid').innerHTML='<div class="empty-gallery">Galeri tidak dapat dimuat saat ini.</div>';
   }
+}
 
-  loadGallery();
+function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+async function toggleLike(key, btnEl){
+  try{
+    const res = await fetch('/api/likes', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ key })
+    });
+    const data = await res.json();
+    if(data.success !== undefined || data.count !== undefined){
+      const count = data.count;
+      const liked = data.liked;
+      // Update this specific button
+      if(btnEl){
+        btnEl.innerHTML = heartSvg(liked) + `<span class="like-count">${count}</span>`;
+        btnEl.classList.toggle('liked', liked);
+      }
+      // Sync modal if open for same key
+      const currentKey = document.getElementById('modalOverlay').dataset.key;
+      if(currentKey === key){
+        document.getElementById('modalLikeCount').textContent = count;
+        const mlb = document.getElementById('modalLikeBtn');
+        mlb.classList.toggle('liked', liked);
+        mlb.querySelector('svg').setAttribute('fill', liked ? 'var(--accent)' : 'none');
+        mlb.querySelector('svg').setAttribute('stroke', liked ? 'var(--accent)' : 'currentColor');
+      }
+    }
+  } catch { showToast('Gagal memproses like.'); }
+}
+
+// ===================== MODAL =====================
+async function openModal(img){
+  const overlay = document.getElementById('modalOverlay');
+  overlay.dataset.key = img.key;
+
+  document.getElementById('modalImg').src = img.url;
+  document.getElementById('modalTitle').textContent = img.name ? `Foto dari ${img.name}` : 'Detail Gambar';
+  document.getElementById('modalUploader').textContent = img.name || 'Anonim';
+  document.getElementById('modalDate').textContent = fmtDate(img.uploaded);
+  document.getElementById('modalUrl').textContent = img.url;
+  document.getElementById('modalUrl').dataset.url = img.url;
+
+  // Fetch likes
+  try{
+    const lr = await fetch(`/api/likes?key=${encodeURIComponent(img.key)}`);
+    const ld = await lr.json();
+    document.getElementById('modalLikeCount').textContent = ld.count||0;
+    const mlb = document.getElementById('modalLikeBtn');
+    mlb.classList.toggle('liked', !!ld.liked);
+    mlb.querySelector('svg').setAttribute('fill', ld.liked ? 'var(--accent)' : 'none');
+    mlb.querySelector('svg').setAttribute('stroke', ld.liked ? 'var(--accent)' : 'currentColor');
+  } catch {}
+
+  // Load comments
+  await loadComments(img.key);
+
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+async function loadComments(key){
+  const list = document.getElementById('commentList');
+  list.innerHTML = '<div class="no-comments">Memuat komentar\u2026</div>';
+  try{
+    const res = await fetch(`/api/comments?key=${encodeURIComponent(key)}`);
+    const data = await res.json();
+    const comments = data.comments || [];
+    if(!comments.length){
+      list.innerHTML = '<div class="no-comments">Belum ada komentar. Jadilah yang pertama!</div>';
+      return;
+    }
+    list.innerHTML = comments.map(c => `
+      <div class="comment-item">
+        <div class="comment-author">${escHtml(c.name)}</div>
+        <div class="comment-date">${fmtDate(c.date)}</div>
+        <div class="comment-text">${escHtml(c.comment)}</div>
+      </div>
+    `).join('');
+  } catch {
+    list.innerHTML = '<div class="no-comments">Gagal memuat komentar.</div>';
+  }
+}
+
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  // reset comment form
+  document.getElementById('commentName').value = '';
+  document.getElementById('commentText').value = '';
+  document.getElementById('commentWordCount').textContent = '0 / 100 kata';
+  document.getElementById('commentError').textContent = '';
+}
+
+document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('modalOverlay').addEventListener('click', e => { if(e.target===e.currentTarget) closeModal(); });
+
+// Modal copy
+document.getElementById('modalCopyBtn').addEventListener('click', async () => {
+  const url = document.getElementById('modalUrl').dataset.url;
+  try{
+    await navigator.clipboard.writeText(url);
+    const cb = document.getElementById('modalCopyBtn');
+    cb.textContent = 'Tersalin!'; cb.classList.add('copied');
+    showToast('Link disalin ke clipboard');
+    setTimeout(()=>{ cb.textContent='Salin'; cb.classList.remove('copied'); }, 1800);
+  } catch { showToast('Salin manual ya'); }
+});
+
+// Modal like
+document.getElementById('modalLikeBtn').addEventListener('click', () => {
+  const key = document.getElementById('modalOverlay').dataset.key;
+  const galBtn = document.querySelector(`.like-btn[data-key="${key}"]`);
+  toggleLike(key, galBtn);
+});
+
+// Comment word counter
+document.getElementById('commentText').addEventListener('input', function(){
+  const words = countWords(this.value);
+  const wc = document.getElementById('commentWordCount');
+  wc.textContent = `${words} / 100 kata`;
+  wc.classList.toggle('over', words > 100);
+});
+
+// Submit comment
+document.getElementById('commentSubmit').addEventListener('click', async () => {
+  const key     = document.getElementById('modalOverlay').dataset.key;
+  const name    = document.getElementById('commentName').value.trim();
+  const comment = document.getElementById('commentText').value.trim();
+  const errEl   = document.getElementById('commentError');
+  errEl.textContent = '';
+
+  if(!name)    { errEl.textContent='Nama tidak boleh kosong.'; return; }
+  if(!comment) { errEl.textContent='Komentar tidak boleh kosong.'; return; }
+  if(countWords(comment) > 100){ errEl.textContent='Komentar maksimal 100 kata.'; return; }
+
+  const btn = document.getElementById('commentSubmit');
+  btn.disabled = true; btn.textContent = 'Mengirim\u2026';
+
+  try{
+    const res = await fetch('/api/comments', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ key, name, comment })
+    });
+    const data = await res.json();
+    if(res.ok && data.success){
+      document.getElementById('commentName').value='';
+      document.getElementById('commentText').value='';
+      document.getElementById('commentWordCount').textContent='0 / 100 kata';
+      await loadComments(key);
+      showToast('Komentar terkirim!');
+    } else { errEl.textContent = data.error || 'Gagal mengirim komentar.'; }
+  } catch { errEl.textContent='Koneksi gagal.'; }
+  finally { btn.disabled=false; btn.textContent='Kirim komentar'; }
+});
+
+// ===================== INIT =====================
+loadGallery();
 </script>
 </body>
 </html>
