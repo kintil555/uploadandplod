@@ -206,7 +206,6 @@
     background:linear-gradient(90deg, #E8E0D0 25%, #F0E8D8 50%, #E8E0D0 75%);
     background-size:200% 100%; animation:skeleton 1.4s infinite;
     margin-bottom:16px; position:relative; display:flex; align-items:center; justify-content:center;
-    cursor:default;
   }
   .modal-img-wrap.loaded{ background:var(--bg); animation:none; }
   .modal-img-wrap.error{ background:#EDE8E0; animation:none; }
@@ -214,7 +213,7 @@
   .modal-img{
     width:100%; max-height:320px; object-fit:contain;
     display:block; opacity:0; transition:opacity .3s;
-    pointer-events:none; user-select:none; -webkit-user-select:none;
+    cursor:zoom-in;
   }
   .modal-img.ready{ opacity:1; }
   .modal-img.nsfw-blur{ filter:blur(20px); transition:filter .3s; }
@@ -452,7 +451,9 @@
       </div>
 
       <div class="modal-img-wrap" id="modalImgWrap">
-        <img class="modal-img" id="modalImg" alt="" />
+        <a id="modalImgLink" href="#" target="_blank" rel="noopener" style="display:block;width:100%">
+          <img class="modal-img" id="modalImg" alt="" />
+        </a>
       </div>
 
       <div class="modal-meta">
@@ -886,6 +887,8 @@ async function openModal(img){
   dlBtn.disabled = false;
   dlBtn.textContent = '';
   dlBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Unduh Gambar`;
+
+  document.getElementById('modalImgLink').href = img.url;
 
   // Load image with skeleton + error handling
   modalImg.onload  = () => { imgWrap.classList.add('loaded'); modalImg.classList.add('ready'); };
