@@ -768,6 +768,19 @@ window._admin = (() => {
   return {
     auth(secret)              { _secret = secret; console.log('%c[Admin] Secret tersimpan untuk sesi ini.', 'color:#3F5D54;font-weight:bold'); },
     listAll()                 { return call('list-all'); },
+    async keys() {
+      const data = await call('list-all');
+      if (!data || !data.images) return;
+      console.log(`%c[Admin] Total: ${data.total} gambar\n`, 'color:#3F5D54;font-weight:bold');
+      console.table(data.images.map((img, i) => ({
+        '#':       i + 1,
+        'Key/UUID': img.key,
+        'Nama':    img.name || '—',
+        'NSFW':    img.nsfw ? '⚠️ ya' : 'tidak',
+        'Upload':  img.uploaded ? new Date(img.uploaded).toLocaleString('id-ID') : '—',
+      })));
+      return data.images;
+    },
     setNsfw(key, nsfw)        { return call('set-nsfw', { key, nsfw }); },
     setName(key, name)        { return call('set-name', { key, name }); },
     deleteImage(key)          { return call('delete', { key }); },
@@ -780,7 +793,8 @@ window._admin = (() => {
 ║            KIRIM GAMBAR — ADMIN              ║
 ╠══════════════════════════════════════════════╣
 ║  _admin.auth('secret')      set secret       ║
-║  _admin.listAll()           daftar semua     ║
+║  _admin.keys()              tabel UUID+info  ║
+║  _admin.listAll()           raw JSON semua   ║
 ║  _admin.setNsfw(key, bool)  tandai NSFW      ║
 ║  _admin.setName(key, name)  ganti nama       ║
 ║  _admin.deleteImage(key)    hapus gambar     ║
