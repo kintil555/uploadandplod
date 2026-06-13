@@ -1,26 +1,28 @@
 // GET /images/:id
-// Menyajikan file gambar yang tersimpan di R2.
+// Menyajikan file gambar yang tersimpan di Workers KV.
 
 export async function onRequestGet(context) {
   const { env, params } = context;
   const key = params.id;
 
-  if (!env.IMAGE_BUCKET) {
-    return new Response('Bucket R2 belum dihubungkan ke project ini.', { status: 500 });
+  if (!env.IMAGE_KV) {
+    return new Response('KV namespace belum dihubungkan ke project ini.', { status: 500 });
   }
   if (!key) {
     return new Response('Tidak ditemukan.', { status: 404 });
   }
 
-  const object = await env.IMAGE_BUCKET.get(key);
-  if (!object) {
+  const { value, metadata } = await env.IMAGE_KV.getWithMetadata(key, { type: 'arrayBuffer' });
+  if (!value) {
     return new Response('Gambar tidak ditemukan.', { status: 404 });
   }
 
-  const headers = new Headers();
-  object.writeHttpMetadata(headers);
-  headers.set('etag', object.httpEtag);
-  headers.set('Cache-Control', 'public, max-age=31536000, immutable');
+  const contentType = (metadata && metadata.contentType) || 'application/octet-stream';
 
-  return new Response(object.body, { headers });
+  return new Response(value, {
+    headers: {
+      'Content-Type': contentType,
+      'Cache-Control': 'public, max-age=31536000, immutable',
+    },
+  });
 }

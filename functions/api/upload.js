@@ -1,7 +1,7 @@
 // POST /api/upload
-// Menerima file dari form-data (field "file") dan menyimpannya ke R2.
+// Menerima file dari form-data (field "file") dan menyimpannya ke Workers KV.
 
-const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_SIZE = 10 * 1024 * 1024; // 10MB (limit value KV adalah 25MB)
 const ALLOWED_TYPES = new Set([
   'image/jpeg',
   'image/png',
@@ -14,8 +14,8 @@ const ALLOWED_TYPES = new Set([
 export async function onRequestPost(context) {
   const { request, env } = context;
 
-  if (!env.IMAGE_BUCKET) {
-    return json({ error: 'Bucket R2 belum dihubungkan ke project ini.' }, 500);
+  if (!env.IMAGE_KV) {
+    return json({ error: 'KV namespace belum dihubungkan ke project ini.' }, 500);
   }
 
   let formData;
@@ -38,11 +38,16 @@ export async function onRequestPost(context) {
     return json({ error: 'Ukuran file maksimal 10MB.' }, 400);
   }
 
+  const buffer = await file.arrayBuffer();
   const ext = extFromType(file.type);
   const key = `${crypto.randomUUID()}.${ext}`;
 
-  await env.IMAGE_BUCKET.put(key, file.stream(), {
-    httpMetadata: { contentType: file.type },
+  await env.IMAGE_KV.put(key, buffer, {
+    metadata: {
+      contentType: file.type,
+      uploaded: new Date().toISOString(),
+      size: buffer.byteLength,
+    },
   });
 
   const origin = new URL(request.url).origin;

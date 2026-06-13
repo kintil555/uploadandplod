@@ -1,26 +1,26 @@
 // GET /api/list
-// Mengambil daftar gambar terbaru dari R2 untuk ditampilkan di galeri.
+// Mengambil daftar gambar terbaru dari Workers KV untuk ditampilkan di galeri.
 
 export async function onRequestGet(context) {
   const { request, env } = context;
 
-  if (!env.IMAGE_BUCKET) {
+  if (!env.IMAGE_KV) {
     return json({ images: [] });
   }
 
   try {
-    const listed = await env.IMAGE_BUCKET.list({ limit: 100 });
+    const listed = await env.IMAGE_KV.list({ limit: 1000 });
     const origin = new URL(request.url).origin;
 
-    const images = listed.objects
-      .sort((a, b) => new Date(b.uploaded) - new Date(a.uploaded))
-      .slice(0, 24)
-      .map((obj) => ({
-        key: obj.key,
-        url: `${origin}/images/${obj.key}`,
-        uploaded: obj.uploaded,
-        size: obj.size,
-      }));
+    const images = listed.keys
+      .map((k) => ({
+        key: k.name,
+        url: `${origin}/images/${k.name}`,
+        uploaded: k.metadata && k.metadata.uploaded,
+        size: k.metadata && k.metadata.size,
+      }))
+      .sort((a, b) => new Date(b.uploaded || 0) - new Date(a.uploaded || 0))
+      .slice(0, 24);
 
     return json({ images });
   } catch (err) {
