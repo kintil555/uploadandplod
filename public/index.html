@@ -248,11 +248,62 @@
   .comment-submit:hover{ filter:brightness(1.08); }
   .comment-submit:disabled{ opacity:.5; cursor:default; }
 
-  /* Tabs panel active state */
-  [data-panel]{ display:none; }
-  [data-panel].active{ display:block; }
+  /* Panel active state diatur di dalam .upload-sheet-body */
 
   footer{ margin-top:60px; text-align:center; font-size:13px; color:var(--ink-soft); font-family:'Space Mono',monospace; }
+
+  /* FAB upload button */
+  .fab-upload{
+    position:fixed; bottom:28px; right:24px;
+    width:52px; height:52px; border-radius:999px;
+    background:var(--accent); border:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 4px 16px rgba(232,117,44,.45);
+    transition:transform .15s ease, filter .15s ease;
+    z-index:500;
+  }
+  .fab-upload:hover{ filter:brightness(1.1); transform:scale(1.06); }
+  .fab-upload:active{ transform:scale(.95); }
+  .fab-upload svg{ width:26px; height:26px; color:#1A130A; }
+  @media(min-width:600px){
+    .fab-upload{ bottom:36px; right:36px; width:56px; height:56px; }
+  }
+
+  /* Upload overlay */
+  .upload-overlay{
+    position:fixed; inset:0;
+    background:rgba(33,31,27,.6);
+    display:none; align-items:flex-end; justify-content:center;
+    z-index:800;
+    -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px);
+  }
+  .upload-overlay.open{ display:flex; }
+  @media(min-width:600px){ .upload-overlay{ align-items:center; } }
+
+  .upload-sheet{
+    background:var(--surface); width:100%; max-width:540px;
+    border-radius:var(--radius) var(--radius) 0 0;
+    max-height:92vh; overflow-y:auto;
+    padding-bottom:env(safe-area-inset-bottom,0px);
+    -webkit-overflow-scrolling:touch; overscroll-behavior:contain;
+  }
+  @media(min-width:600px){ .upload-sheet{ border-radius:var(--radius); max-height:88vh; } }
+
+  .upload-sheet-header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 20px 14px; border-bottom:1px solid var(--border);
+    position:sticky; top:0; background:var(--surface); z-index:1;
+  }
+  .upload-sheet-header h3{ font-family:'Space Grotesk',sans-serif; font-size:17px; font-weight:700; margin:0; }
+
+  .upload-sheet-body{ padding:20px; }
+
+  /* Tabs inside sheet — reuse existing .tabs styles */
+  .upload-sheet-body .tabs{ margin-bottom:20px; }
+
+  /* Panel inside sheet */
+  .upload-sheet-body [data-panel]{ display:none; }
+  .upload-sheet-body [data-panel].active{ display:block; }
 </style>
 </head>
 <body>
@@ -268,14 +319,44 @@
     <p class="tagline">Upload foto, dapat link langsung. Gratis, tanpa login.</p>
   </header>
 
-  <div class="tabs">
-    <button class="tab-btn active" data-tab="file">Upload File</button>
-    <button class="tab-btn" data-tab="link">Dari Link</button>
+  <!-- Tombol + upload floating di pojok kanan atas header -->
+  <button class="fab-upload" id="fabUpload" aria-label="Upload gambar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+    </svg>
+  </button>
+
+  <div class="gallery-section">
+    <div class="gallery-head">
+      <h2>Galeri terbaru</h2>
+      <span id="galleryCount"></span>
+    </div>
+    <div class="gallery-grid" id="galleryGrid">
+      <div class="empty-gallery">Memuat galeri&hellip;</div>
+    </div>
+    <div class="load-more-wrap" id="loadMoreWrap" style="display:none">
+      <button class="load-more-btn" id="loadMoreBtn">Muat lebih banyak</button>
+    </div>
   </div>
 
-  <div class="panel">
-    <div class="sprockets"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="panel-body">
+  <footer>dibuat dengan Cloudflare Pages + Workers KV</footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ===== UPLOAD OVERLAY ===== -->
+<div class="upload-overlay" id="uploadOverlay">
+  <div class="upload-sheet">
+    <div class="upload-sheet-header">
+      <h3>Upload Gambar</h3>
+      <button class="modal-close" id="uploadClose" aria-label="Tutup">&times;</button>
+    </div>
+    <div class="upload-sheet-body">
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="file">File</button>
+        <button class="tab-btn" data-tab="link">Dari Link</button>
+      </div>
 
       <!-- Upload File -->
       <div data-panel="file" class="active">
@@ -292,7 +373,7 @@
             </svg>
           </div>
           <h3>Seret &amp; lepas gambar di sini</h3>
-          <p>atau <span>pilih dari perangkat</span> · JPG, PNG, GIF, WEBP, AVIF, SVG · maks 10 MB</p>
+          <p>atau <span>pilih dari perangkat</span> · JPG PNG GIF WEBP · maks 10 MB</p>
         </div>
         <input type="file" id="fileInput" accept="image/*" style="display:none" />
       </div>
@@ -311,7 +392,7 @@
               <button class="btn" id="urlSubmit">Simpan</button>
             </div>
           </div>
-          <p class="hint">Gambar dari link akan diunduh dan disimpan ulang, jadi link hasilnya tetap aktif meski link asal mati.</p>
+          <p class="hint">Gambar dari link akan diunduh dan disimpan ulang, link hasil tetap aktif meski link asal mati.</p>
         </div>
       </div>
 
@@ -333,24 +414,7 @@
 
     </div>
   </div>
-
-  <div class="gallery-section">
-    <div class="gallery-head">
-      <h2>Galeri terbaru</h2>
-      <span id="galleryCount"></span>
-    </div>
-    <div class="gallery-grid" id="galleryGrid">
-      <div class="empty-gallery">Memuat galeri&hellip;</div>
-    </div>
-    <div class="load-more-wrap" id="loadMoreWrap" style="display:none">
-      <button class="load-more-btn" id="loadMoreBtn">Muat lebih banyak</button>
-    </div>
-  </div>
-
-  <footer>dibuat dengan Cloudflare Pages + Workers KV</footer>
 </div>
-
-<div class="toast" id="toast"></div>
 
 <!-- ===== MODAL ===== -->
 <div class="modal-overlay" id="modalOverlay">
@@ -434,17 +498,34 @@ function countWords(text){ return text.trim().split(/\s+/).filter(Boolean).lengt
 function fmtDate(iso){ if(!iso) return ''; const d=new Date(iso); return d.toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'})+' '+d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}); }
 function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-// ===================== TABS =====================
-const tabBtns = document.querySelectorAll('.tab-btn');
-const tabPanels = document.querySelectorAll('[data-panel]');
+// ===================== TABS (inside upload sheet) =====================
+const tabBtns = document.querySelectorAll('.upload-sheet-body .tab-btn');
+const tabPanels = document.querySelectorAll('.upload-sheet-body [data-panel]');
 tabBtns.forEach(btn => {
   btn.addEventListener('click', () => {
     tabBtns.forEach(b=>b.classList.remove('active'));
     tabPanels.forEach(p=>p.classList.remove('active'));
     btn.classList.add('active');
-    document.querySelector(`[data-panel="${btn.dataset.tab}"]`).classList.add('active');
+    document.querySelector(`.upload-sheet-body [data-panel="${btn.dataset.tab}"]`).classList.add('active');
     hideError();
   });
+});
+
+// ===================== UPLOAD OVERLAY =====================
+function openUploadOverlay(){
+  document.getElementById('uploadOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeUploadOverlay(){
+  document.getElementById('uploadOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  hideError();
+  resetProgress();
+}
+document.getElementById('fabUpload').addEventListener('click', openUploadOverlay);
+document.getElementById('uploadClose').addEventListener('click', closeUploadOverlay);
+document.getElementById('uploadOverlay').addEventListener('click', e => {
+  if(e.target === e.currentTarget) closeUploadOverlay();
 });
 
 // ===================== UPLOAD FROM FILE =====================
@@ -496,8 +577,8 @@ function handleFile(file){
     try{
       const data=JSON.parse(xhr.responseText);
       if(xhr.status>=200 && xhr.status<300 && data.success){
-        showResult(data.url, localPreview);
-        // Reset gallery to page 1
+        closeUploadOverlay();
+        showToast('Gambar berhasil diupload! 🎉');
         galleryPage = 1;
         galleryImages = [];
         loadGallery();
@@ -533,7 +614,8 @@ document.getElementById('urlSubmit').addEventListener('click', async () => {
     const data = await res.json();
     resetProgress();
     if(res.ok && data.success){
-      showResult(data.url, url);
+      closeUploadOverlay();
+      showToast('Gambar berhasil disimpan! 🎉');
       document.getElementById('urlInput').value='';
       galleryPage = 1;
       galleryImages = [];
